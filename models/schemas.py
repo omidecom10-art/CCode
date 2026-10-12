@@ -73,3 +73,39 @@ class WatermarkRegion(BaseModel):
     width: int
     height: int
     confidence: float = Field(ge=0.0, le=1.0)
+
+
+class ScriptSection(BaseModel):
+    timestamp: str = Field(description="Time range, e.g. '0-3s'")
+    section_name: str = Field(description="e.g. Hook, Problem, Solution, CTA")
+    voiceover: str = Field(description="Exact words spoken")
+    visual_direction: str = Field(description="What the viewer sees on screen")
+    text_overlay: str = Field(default="", description="Text shown on screen")
+    music_direction: str = Field(default="", description="Music/sound cues")
+
+
+class AdScript(BaseModel):
+    title: str = Field(description="Short title for this script")
+    platform: str = Field(description="Target platform: tiktok, instagram, facebook, youtube")
+    duration_seconds: int = Field(description="Total video length in seconds")
+    structure: str = Field(description="Script structure used, e.g. Hook-Problem-Solution-CTA")
+    sections: list[ScriptSection] = Field(description="Ordered sections of the script")
+    key_message: str = Field(description="The core message/selling point")
+    notes: str = Field(default="", description="Production notes or tips")
+
+
+class ScriptVariation(BaseModel):
+    variation_name: str = Field(description="Short name for this variation")
+    angle: str = Field(description="The approach/angle used, e.g. 'social proof', 'FOMO'")
+    script_text: str = Field(description="The full script or hook text")
+    visual_direction: str = Field(description="Visual instructions")
+    why_it_works: str = Field(description="Why this variation should perform well")
+
+
+class AdScriptBrief(BaseModel):
+    product_or_service: str
+    target_audience: str
+    key_benefit: str
+    platform: str = "tiktok"
+    duration_seconds: int = 30
+    tone: str = Field(default="engaging", description="e.g. urgent, friendly, edgy, luxurious")
