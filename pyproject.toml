@@ -1,0 +1,18 @@
+[project]
+name = "ad-agent"
+version = "0.1.0"
+description = "AI-powered agent for creating, analyzing, and optimizing ad creatives"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=1.0.0",
+    "opencv-python-headless>=4.8.0",
+    "Pillow>=10.0.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+ad-agent = "cli.main:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
