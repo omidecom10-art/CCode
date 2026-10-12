@@ -107,13 +107,41 @@ def cmd_remove_subtitles(args):
     print(f"Done: {result}")
 
 
-def cmd_generate_script(args):
-    from agent.code_generator import generate_and_save
-    description = " ".join(args.description)
-    path = generate_and_save(description, args.filename)
-    print(f"Script saved to: {path}")
-    if args.show:
-        print("\n" + Path(path).read_text())
+def cmd_write_script(args):
+    from agent.script_writer import save_script, write_ad_script
+    brief = " ".join(args.brief)
+    print(f"Writing {args.duration}s ad script for {args.platform}...\n")
+    script = write_ad_script(brief, args.platform, args.duration)
+    path = save_script(script)
+    print(Path(path).read_text())
+    print(f"\nSaved to: {path}")
+
+
+def cmd_hooks(args):
+    from agent.script_writer import write_hook_variations
+    product = " ".join(args.product)
+    print(f"Generating {args.num} hooks for {args.platform}...\n")
+    hooks = write_hook_variations(product, args.num, args.platform)
+    for i, hook in enumerate(hooks, 1):
+        print(f"--- Hook {i}: {hook.variation_name} ({hook.angle}) ---")
+        print(f"  Text: {hook.script_text}")
+        print(f"  Visuellt: {hook.visual_direction}")
+        print(f"  Varfor: {hook.why_it_works}")
+        print()
+
+
+def cmd_iterate_script(args):
+    from agent.script_writer import iterate_winning_script
+    script = Path(args.script).read_text() if Path(args.script).exists() else args.script
+    what_worked = " ".join(args.what_worked)
+    print(f"Creating {args.variations} variations...\n")
+    variations = iterate_winning_script(script, what_worked, args.variations)
+    for i, var in enumerate(variations, 1):
+        print(f"=== Variation {i}: {var.variation_name} ({var.angle}) ===")
+        print(var.script_text)
+        print(f"\nVisuellt: {var.visual_direction}")
+        print(f"Varfor det funkar: {var.why_it_works}")
+        print()
 
 
 def main():
@@ -173,12 +201,26 @@ def main():
     p.add_argument("--output", "-o", required=True)
     p.set_defaults(func=cmd_remove_subtitles)
 
-    # generate-script
-    p = sub.add_parser("generate-script", help="Generate a custom Python script")
-    p.add_argument("description", nargs="+")
-    p.add_argument("--filename", "-f")
-    p.add_argument("--show", action="store_true", help="Print generated script")
-    p.set_defaults(func=cmd_generate_script)
+    # write-script (ad video script/manus)
+    p = sub.add_parser("write-script", help="Write a video ad script/manus")
+    p.add_argument("brief", nargs="+", help="What the ad is about")
+    p.add_argument("--platform", default="tiktok", choices=["tiktok", "instagram", "facebook", "youtube"])
+    p.add_argument("--duration", "-d", type=int, default=30, help="Video length in seconds")
+    p.set_defaults(func=cmd_write_script)
+
+    # hooks (generate hook variations)
+    p = sub.add_parser("hooks", help="Generate scroll-stopping hook variations for A/B testing")
+    p.add_argument("product", nargs="+", help="Product or offer description")
+    p.add_argument("--num", "-n", type=int, default=10, help="Number of hooks to generate")
+    p.add_argument("--platform", default="tiktok", choices=["tiktok", "instagram", "facebook", "youtube"])
+    p.set_defaults(func=cmd_hooks)
+
+    # iterate-script (iterate on a winning script)
+    p = sub.add_parser("iterate-script", help="Create variations of a winning ad script")
+    p.add_argument("--script", "-s", required=True, help="Winning script text or .txt file")
+    p.add_argument("what_worked", nargs="+", help="What elements performed well")
+    p.add_argument("--variations", "-n", type=int, default=5)
+    p.set_defaults(func=cmd_iterate_script)
 
     args = parser.parse_args()
     args.func(args)

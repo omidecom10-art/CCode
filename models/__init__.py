@@ -1,9 +1,13 @@
 from models.schemas import (
     AdAnalysis,
+    AdScript,
+    AdScriptBrief,
     ChangeItem,
     ComparisonResult,
     HookAnalysis,
     IterationPlan,
+    ScriptSection,
+    ScriptVariation,
     TaskPlan,
     TaskStep,
     VideoEditSpec,

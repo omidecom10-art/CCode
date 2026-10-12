@@ -1,115 +1,125 @@
 # AI Ad Agent
 
-AI-powered agent for creating, analyzing, and optimizing ad creatives. Built to be as cheap as possible.
+AI-agent som skapar annonsmanus, analyserar annonser, redigerar video och tar bort vattenmarken. Byggt for att vara sa billigt som mojligt.
 
-## Cost Breakdown
+## Kostnad
 
-| Operation | Engine | Cost per Call |
-|-----------|--------|--------------|
-| Ad Analysis | Claude Haiku 5.5 | ~$0.0007 |
-| Ad Comparison | Claude Haiku 5.5 | ~$0.001 |
-| Iteration Planning | Claude Haiku 5.5 | ~$0.001 |
-| Performance Explanation | Claude Haiku 5.5 | ~$0.0005 |
-| Script Generation | Claude Sonnet 5.5 | ~$0.03 |
-| Video Editing | FFmpeg (local) | $0.00 |
-| Watermark Removal | OpenCV (local) | $0.00 |
-| Image Processing | Pillow (local) | $0.00 |
+| Funktion | Motor | Kostnad per anrop |
+|----------|-------|-------------------|
+| Skriv annonsmanus | Claude Haiku 5.5 | ~$0.001 |
+| Generera hooks | Claude Haiku 5.5 | ~$0.001 |
+| Iterera vinnande manus | Claude Haiku 5.5 | ~$0.001 |
+| Analysera annons | Claude Haiku 5.5 | ~$0.0007 |
+| Jamfor annonser | Claude Haiku 5.5 | ~$0.001 |
+| Videoredigering | FFmpeg (lokalt) | $0.00 |
+| Ta bort vattenmarke | OpenCV (lokalt) | $0.00 |
+| Ta bort undertexter | OpenCV (lokalt) | $0.00 |
+| Bildredigering | Pillow (lokalt) | $0.00 |
 
-**Typical workflow:** Analyze + iterate = ~$0.002 (two tenths of a cent).
+**Typiskt arbetsflode:** Skriv manus + generera hooks + analysera = ~$0.003 (under 1 cent).
 
-## Requirements
+ALLT anvander Haiku (billigaste modellen). Ingen Sonnet-kostnad alls.
+
+## Krav
 
 - Python 3.10+
-- FFmpeg (system install)
-- Anthropic API key
+- FFmpeg (systeminstallation)
+- Anthropic API-nyckel
 
-## Setup
+## Installation
 
 ```bash
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and add your ANTHROPIC_API_KEY
+# Redigera .env och lagg till din ANTHROPIC_API_KEY
 ```
 
-## Usage
+## Anvandning
 
-### Free-form Agent (routes automatically)
+### Agent-lage (fritext — routen automatiskt)
 
 ```bash
-python -m cli.main agent "Analyze this ad and suggest 5 iterations: [description]"
-python -m cli.main agent "Remove the watermark from video.mp4 and trim to 15 seconds"
+python -m cli.main agent "Skriv ett 30s TikTok-manus for en hudvardskram"
+python -m cli.main agent "Ta bort vattenmarket fran video.mp4 och trimma till 15 sekunder"
+python -m cli.main agent "Analysera den har annonsen och ge mig 5 nya hooks"
 ```
 
-### Direct Commands
+### Skriv annonsmanus
 
 ```bash
-# Analyze an ad
-python -m cli.main analyze -i "30s TikTok ad showing product demo with upbeat music"
-python -m cli.main analyze -i ad_description.txt -m metrics.json
+# Komplett manus med hook, voiceover, visuella anvisningar och CTA
+python -m cli.main write-script "Hudvardskram for unga kvinnor, fokus pa naturliga ingredienser" --platform tiktok --duration 30
 
-# Compare ads
-python -m cli.main compare -i ads.json
+# Pa Instagram
+python -m cli.main write-script "Proteintillskott for gymmare" --platform instagram --duration 15
+```
 
-# Generate iterations
-python -m cli.main iterate -i "winning ad description" -n 5
+### Generera hooks for A/B-testning
 
-# Video editing
+```bash
+# 10 olika hook-variationer
+python -m cli.main hooks "Hudvardskram med 50% rabatt"
+
+# 15 hooks for YouTube
+python -m cli.main hooks "Onlinekurs i daytrading" --num 15 --platform youtube
+```
+
+### Iterera pa vinnande manus
+
+```bash
+# Skapa variationer av ett manus som funkar bra
+python -m cli.main iterate-script --script vinnande_manus.txt "hooken och social proof" -n 5
+```
+
+### Analysera annonser
+
+```bash
+# Analysera en annons
+python -m cli.main analyze -i "30s TikTok med produktdemo och social proof"
+python -m cli.main analyze -i annons_beskrivning.txt -m metrics.json
+
+# Jamfor flera annonser
+python -m cli.main compare -i annonser.json
+
+# Forslag pa forbattringar
+python -m cli.main iterate -i "beskrivning av annonsen" -n 5
+```
+
+### Videoredigering
+
+```bash
 python -m cli.main edit -op trim -i video.mp4 -o trimmed.mp4 -s 00:00:05 -e 00:00:20
 python -m cli.main edit -op merge --inputs v1.mp4 v2.mp4 -o merged.mp4
-python -m cli.main edit -op overlay-text -i video.mp4 -o output.mp4 -t "Buy Now!" -p bottom
+python -m cli.main edit -op overlay-text -i video.mp4 -o output.mp4 -t "Kop nu!" -p bottom
 python -m cli.main edit -op resize -i video.mp4 -o output.mp4 --width 1080 --height 1920
 python -m cli.main edit -op speed -i video.mp4 -o output.mp4 --speed 1.5
-
-# Remove watermarks
-python -m cli.main remove-watermark -i image.png -o clean.png
-python -m cli.main remove-watermark -i video.mp4 -o clean.mp4
-
-# Remove subtitles
-python -m cli.main remove-subtitles -i video.mp4 -o clean.mp4
-
-# Generate custom scripts
-python -m cli.main generate-script "Create 10 variations of a winning ad by swapping hooks" --show
 ```
 
-### As Python Library
+### Ta bort vattenmarken och undertexter
 
-```python
-from tools.ad_analyzer import analyze_ad, suggest_iterations
-from tools.video_editor import trim_video, add_text_overlay
-from tools.watermark_remover import remove_watermark_from_video
-from agent.orchestrator import run
-
-# Analyze
-analysis = analyze_ad("30s product demo ad with social proof hook")
-print(analysis.overall_score, analysis.recommendations)
-
-# Iterate
-plan = suggest_iterations(analysis, num_variations=5)
-
-# Edit
-trim_video("input.mp4", "output.mp4", "00:00:03", "00:00:18")
-
-# Agent mode
-result = run("Remove watermark, trim to 15s, add CTA overlay")
+```bash
+python -m cli.main remove-watermark -i bild.png -o ren.png
+python -m cli.main remove-watermark -i video.mp4 -o ren.mp4
+python -m cli.main remove-subtitles -i video.mp4 -o ren.mp4
 ```
 
-## Architecture
+## Arkitektur
 
 ```
 agent/
-  orchestrator.py  - Main agent loop (Haiku for routing, ~$0.0004/call)
-  planner.py       - Task decomposition (Haiku)
-  code_generator.py - Script generation (Sonnet, only when needed)
+  orchestrator.py   - Huvudagent som router uppgifter (Haiku, ~$0.0004/anrop)
+  script_writer.py  - Skriver annonsmanus, hooks, variationer (Haiku)
+  planner.py        - Bryter ner komplexa uppgifter i steg (Haiku)
 tools/
-  video_editor.py      - FFmpeg wrapper (free)
-  watermark_remover.py - OpenCV inpainting (free)
-  image_processor.py   - Pillow/OpenCV (free)
-  ad_analyzer.py       - Ad analysis (Haiku)
+  video_editor.py      - FFmpeg-wrapper (gratis)
+  watermark_remover.py - OpenCV inpainting (gratis)
+  image_processor.py   - Pillow/OpenCV (gratis)
+  ad_analyzer.py       - Annonsanalys (Haiku)
 ```
 
-90%+ of LLM calls go through Haiku (~20x cheaper than Sonnet). Sonnet is only used for code generation.
+100% av LLM-anrop gar genom Haiku (~20x billigare an Sonnet). All mediebearbetning ar lokal och gratis.
 
-## Running Tests
+## Tester
 
 ```bash
 pip install pytest

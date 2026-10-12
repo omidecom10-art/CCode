@@ -7,17 +7,20 @@ from models.schemas import WatermarkRegion
 from utils.llm import call_with_tools
 
 ORCHESTRATOR_SYSTEM = """You are an AI ad agent that helps create, analyze, and optimize ad creatives.
+Respond in the same language the user writes in.
 
 You have access to these tools:
 1. analyze_ad - Analyze an ad creative (description + optional metrics)
 2. compare_ads - Compare multiple ads to find patterns
 3. suggest_iterations - Get iteration ideas for an ad
 4. explain_performance - Explain why an ad performs the way it does
-5. edit_video - Edit videos (trim, cut, merge, overlay text, resize, speed change)
-6. remove_watermark - Remove watermarks from images or videos
-7. remove_subtitles - Remove subtitles from images or videos
-8. process_image - Process images (resize, add text, crop, adjust)
-9. generate_script - Generate a custom Python script for complex operations
+5. write_ad_script - Write a complete video ad script/manus with hooks, voiceover, visuals, CTA
+6. write_hook_variations - Generate multiple hook variations for A/B testing
+7. iterate_winning_script - Create variations on a winning ad script
+8. edit_video - Edit videos (trim, cut, merge, overlay text, resize, speed change)
+9. remove_watermark - Remove watermarks from images or videos
+10. remove_subtitles - Remove subtitles from images or videos
+11. process_image - Process images (resize, add text, crop, adjust)
 
 Always think step by step. For multi-step tasks, chain operations in the right order.
 Be specific about file paths and parameters. Ask for clarification if essential info is missing."""
@@ -157,15 +160,42 @@ TOOL_DEFINITIONS = [
         },
     },
     {
-        "name": "generate_script",
-        "description": "Generate a custom Python script for complex or batch operations. Uses the expensive model (~$0.03/call).",
+        "name": "write_ad_script",
+        "description": "Write a complete video ad script/manus with hooks, voiceover text, visual directions, text overlays, and CTA",
         "input_schema": {
             "type": "object",
             "properties": {
-                "description": {"type": "string", "description": "What the script should do"},
-                "filename": {"type": "string", "description": "Output filename (optional)"},
+                "brief": {"type": "string", "description": "What the ad is about: product, offer, target audience, key benefit"},
+                "platform": {"type": "string", "enum": ["tiktok", "instagram", "facebook", "youtube"], "default": "tiktok"},
+                "duration": {"type": "integer", "description": "Video length in seconds", "default": 30},
             },
-            "required": ["description"],
+            "required": ["brief"],
+        },
+    },
+    {
+        "name": "write_hook_variations",
+        "description": "Generate multiple scroll-stopping hook variations (first 3 seconds) for A/B testing",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "product_or_offer": {"type": "string", "description": "What you're selling/promoting"},
+                "num_hooks": {"type": "integer", "default": 10},
+                "platform": {"type": "string", "default": "tiktok"},
+            },
+            "required": ["product_or_offer"],
+        },
+    },
+    {
+        "name": "iterate_winning_script",
+        "description": "Create new variations of a winning ad script while keeping what works",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "original_script": {"type": "string", "description": "The original winning script text"},
+                "what_worked": {"type": "string", "description": "What elements performed well"},
+                "num_variations": {"type": "integer", "default": 5},
+            },
+            "required": ["original_script", "what_worked"],
         },
     },
 ]
@@ -286,10 +316,25 @@ def _execute_tool(name: str, params: dict) -> str:
                 )
             return f"Unknown image operation: {op}"
 
-        elif name == "generate_script":
-            from agent.code_generator import generate_and_save
-            path = generate_and_save(params["description"], params.get("filename"))
-            return f"Script saved to: {path}"
+        elif name == "write_ad_script":
+            from agent.script_writer import save_script, write_ad_script
+            script = write_ad_script(params["brief"], params.get("platform", "tiktok"), params.get("duration", 30))
+            path = save_script(script)
+            return f"Script saved to: {path}\n\n{script.model_dump_json(indent=2)}"
+
+        elif name == "write_hook_variations":
+            from agent.script_writer import write_hook_variations
+            hooks = write_hook_variations(
+                params["product_or_offer"], params.get("num_hooks", 10), params.get("platform", "tiktok"),
+            )
+            return json.dumps([h.model_dump() for h in hooks], indent=2, ensure_ascii=False)
+
+        elif name == "iterate_winning_script":
+            from agent.script_writer import iterate_winning_script
+            variations = iterate_winning_script(
+                params["original_script"], params["what_worked"], params.get("num_variations", 5),
+            )
+            return json.dumps([v.model_dump() for v in variations], indent=2, ensure_ascii=False)
 
         return f"Unknown tool: {name}"
 
