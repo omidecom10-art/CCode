@@ -6,7 +6,8 @@ from pathlib import Path
 from models.schemas import WatermarkRegion
 from utils.llm import call_with_tools
 
-ORCHESTRATOR_SYSTEM = """You are an AI ad agent that helps create, analyze, and optimize ad creatives.
+ORCHESTRATOR_SYSTEM = """You are an AI ad agent that helps create, analyze, and optimize ad creatives,
+AND find winning dropshipping products.
 Respond in the same language the user writes in.
 
 You have access to these tools:
@@ -21,6 +22,11 @@ You have access to these tools:
 9. remove_watermark - Remove watermarks from images or videos
 10. remove_subtitles - Remove subtitles from images or videos
 11. process_image - Process images (resize, add text, crop, adjust)
+12. find_products - Find winning dropshipping products in a niche
+13. analyze_product - Deep analysis of a product's dropshipping potential
+14. product_report - Generate a full product research report for a niche
+15. validate_product - Quick validation of a product idea (margins, feasibility)
+16. compare_products - Compare products and rank by dropshipping potential
 
 Always think step by step. For multi-step tasks, chain operations in the right order.
 Be specific about file paths and parameters. Ask for clarification if essential info is missing."""
@@ -198,6 +204,71 @@ TOOL_DEFINITIONS = [
             "required": ["original_script", "what_worked"],
         },
     },
+    {
+        "name": "find_products",
+        "description": "Find winning dropshipping products in a niche. Returns scored and ranked product candidates.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "niche": {"type": "string", "description": "Niche or category to search in"},
+                "num_results": {"type": "integer", "default": 10, "description": "Number of products to find"},
+            },
+            "required": ["niche"],
+        },
+    },
+    {
+        "name": "analyze_product",
+        "description": "Deep analysis of a specific product's dropshipping potential — demand, margins, competition, ad potential, risks",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "product_name": {"type": "string", "description": "Name of the product to analyze"},
+                "product_url": {"type": "string", "description": "Optional product URL"},
+                "niche": {"type": "string", "description": "Product niche for context"},
+            },
+            "required": ["product_name"],
+        },
+    },
+    {
+        "name": "product_report",
+        "description": "Generate a comprehensive product research report for a niche with top picks, strategy, and action plan",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "niche": {"type": "string", "description": "Niche to research"},
+                "budget": {"type": "number", "description": "Testing budget in USD"},
+            },
+            "required": ["niche"],
+        },
+    },
+    {
+        "name": "validate_product",
+        "description": "Quick validation of a product idea — checks margins, pricing, and feasibility",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "product_name": {"type": "string", "description": "Product name"},
+                "selling_price": {"type": "number", "description": "Selling price in USD"},
+                "cost_price": {"type": "number", "description": "Supplier cost in USD"},
+            },
+            "required": ["product_name", "selling_price", "cost_price"],
+        },
+    },
+    {
+        "name": "compare_products",
+        "description": "Compare multiple products and rank them by dropshipping potential",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "products": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of product names to compare",
+                },
+            },
+            "required": ["products"],
+        },
+    },
 ]
 
 
@@ -335,6 +406,32 @@ def _execute_tool(name: str, params: dict) -> str:
                 params["original_script"], params["what_worked"], params.get("num_variations", 5),
             )
             return json.dumps([v.model_dump() for v in variations], indent=2, ensure_ascii=False)
+
+        elif name == "find_products":
+            from tools.product_researcher import search_trending_products
+            products = search_trending_products(params["niche"], params.get("num_results", 10))
+            return json.dumps([p.model_dump() for p in products], indent=2, ensure_ascii=False)
+
+        elif name == "analyze_product":
+            from tools.product_researcher import analyze_product
+            analysis = analyze_product(
+                params["product_name"], params.get("product_url"), params.get("niche"),
+            )
+            return analysis.model_dump_json(indent=2)
+
+        elif name == "product_report":
+            from tools.product_researcher import generate_product_report
+            return generate_product_report(params["niche"], params.get("budget"))
+
+        elif name == "validate_product":
+            from tools.product_researcher import validate_product_idea
+            return validate_product_idea(
+                params["product_name"], params["selling_price"], params["cost_price"],
+            )
+
+        elif name == "compare_products":
+            from tools.product_researcher import compare_products
+            return compare_products(params["products"])
 
         return f"Unknown tool: {name}"
 

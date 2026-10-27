@@ -144,6 +144,98 @@ def cmd_iterate_script(args):
         print()
 
 
+def cmd_find_products(args):
+    from tools.product_researcher import search_trending_products
+    niche = " ".join(args.niche)
+    print(f"Soker vinnande produkter i: {niche}...\n")
+    products = search_trending_products(niche, args.num)
+    for i, p in enumerate(products, 1):
+        margin_bar = "#" * int(p.margin_percent / 10)
+        print(f"{'='*60}")
+        print(f"  #{i} {p.name}")
+        print(f"{'='*60}")
+        print(f"  {p.description}")
+        print(f"  Nisch: {p.niche}")
+        print(f"  Kostnad: ${p.supplier_cost_usd:.2f} -> Pris: ${p.selling_price_usd:.2f} -> Marginal: {p.margin_percent:.0f}% [{margin_bar}]")
+        print(f"  Malgrupp: {p.target_audience}")
+        print(f"  Plattform: {p.best_platform} | Trend: {p.trend_direction} | Konkurrens: {p.competition_level}")
+        print(f"  Viralpoang: {'*' * p.virality_score}{'.' * (10 - p.virality_score)} ({p.virality_score}/10)")
+        print(f"  Wow-faktor: {p.wow_factor}")
+        print(f"  Annonsvinkel: {p.ad_angle}")
+        print(f"  Varfor vinnare: {p.why_winner}")
+        print()
+
+
+def cmd_analyze_product(args):
+    from tools.product_researcher import analyze_product
+    product = " ".join(args.product)
+    print(f"Djupanalyserar: {product}...\n")
+    analysis = analyze_product(product, args.url, args.niche)
+    print(f"{'='*60}")
+    print(f"  {analysis.product_name}")
+    print(f"  Verdict: {analysis.verdict} | Score: {analysis.overall_score}/100")
+    print(f"{'='*60}")
+    print(f"\n--- Efterfragan ---")
+    print(f"  Trend: {analysis.demand.trend_direction}")
+    print(f"  Social media: {analysis.demand.social_media_buzz}")
+    print(f"  Problem: {analysis.demand.problem_solved}")
+    print(f"  Marknad: {analysis.demand.market_size}")
+    print(f"\n--- Vinst ---")
+    print(f"  Kostnad: ${analysis.profit.supplier_cost_usd:.2f}")
+    print(f"  Pris: ${analysis.profit.selling_price_usd:.2f}")
+    print(f"  Marginal: {analysis.profit.margin_percent:.0f}%")
+    print(f"  AOV-potential: {analysis.profit.aov_potential}")
+    print(f"\n--- Konkurrens ---")
+    print(f"  Saljare: {analysis.competition.seller_count}")
+    print(f"  Stormarken: {analysis.competition.brand_dominance}")
+    print(f"  Annonsmattnnad: {analysis.competition.ad_saturation}")
+    print(f"  Differentiering: {analysis.competition.differentiation}")
+    print(f"\n--- Annonspotential ---")
+    print(f"  Videopotential: {analysis.ad_potential.video_ad_potential}/10")
+    print(f"  Basta vinklar: {', '.join(analysis.ad_potential.best_ad_angles)}")
+    print(f"  UGC: {analysis.ad_potential.ugc_potential}")
+    print(f"  Demo mojlig: {'Ja' if analysis.ad_potential.demo_possible else 'Nej'}")
+    print(f"\n--- Risker ---")
+    print(f"  Frakt: {analysis.risks.shipping_risk}")
+    print(f"  Kvalitet: {analysis.risks.quality_risk}")
+    print(f"  Juridiskt: {analysis.risks.legal_risk}")
+    print(f"  Sasong: {analysis.risks.seasonal_risk}")
+    print(f"  Total risk: {analysis.risks.overall_risk}")
+    print(f"\n--- Hook-ideer ---")
+    for i, hook in enumerate(analysis.hook_ideas, 1):
+        print(f"  {i}. {hook}")
+    print(f"\n--- Nasta steg ---")
+    for i, step in enumerate(analysis.action_steps, 1):
+        print(f"  {i}. {step}")
+    print()
+
+
+def cmd_product_report(args):
+    from tools.product_researcher import generate_product_report
+    niche = " ".join(args.niche)
+    print(f"Genererar produktrapport for: {niche}...\n")
+    report = generate_product_report(niche, args.budget)
+    print(report)
+    if args.output:
+        Path(args.output).write_text(report)
+        print(f"\nRapporten sparad till: {args.output}")
+
+
+def cmd_validate_product(args):
+    from tools.product_researcher import validate_product_idea
+    product = " ".join(args.product)
+    print(f"Validerar: {product}...\n")
+    result = validate_product_idea(product, args.price, args.cost)
+    print(result)
+
+
+def cmd_compare_products(args):
+    from tools.product_researcher import compare_products
+    print(f"Jamfor {len(args.products)} produkter...\n")
+    result = compare_products(args.products)
+    print(result)
+
+
 def main():
     parser = argparse.ArgumentParser(description="AI Ad Agent — create, analyze, and optimize ad creatives")
     parser.add_argument("-v", "--verbose", action="store_true")
@@ -221,6 +313,38 @@ def main():
     p.add_argument("what_worked", nargs="+", help="What elements performed well")
     p.add_argument("--variations", "-n", type=int, default=5)
     p.set_defaults(func=cmd_iterate_script)
+
+    # find-products
+    p = sub.add_parser("find-products", help="Find winning dropshipping products in a niche")
+    p.add_argument("niche", nargs="+", help="Niche to search in")
+    p.add_argument("--num", "-n", type=int, default=10, help="Number of products to find")
+    p.set_defaults(func=cmd_find_products)
+
+    # analyze-product
+    p = sub.add_parser("analyze-product", help="Deep analysis of a product's dropshipping potential")
+    p.add_argument("product", nargs="+", help="Product name")
+    p.add_argument("--url", "-u", help="Product URL for reference")
+    p.add_argument("--niche", help="Product niche for context")
+    p.set_defaults(func=cmd_analyze_product)
+
+    # product-report
+    p = sub.add_parser("product-report", help="Generate a full product research report for a niche")
+    p.add_argument("niche", nargs="+", help="Niche to research")
+    p.add_argument("--budget", "-b", type=float, help="Testing budget in USD")
+    p.add_argument("--output", "-o", help="Save report to file")
+    p.set_defaults(func=cmd_product_report)
+
+    # validate-product
+    p = sub.add_parser("validate-product", help="Quick validation of a product idea")
+    p.add_argument("product", nargs="+", help="Product name")
+    p.add_argument("--price", "-p", type=float, required=True, help="Selling price in USD")
+    p.add_argument("--cost", "-c", type=float, required=True, help="Supplier cost in USD")
+    p.set_defaults(func=cmd_validate_product)
+
+    # compare-products
+    p = sub.add_parser("compare-products", help="Compare products for dropshipping potential")
+    p.add_argument("products", nargs="+", help="Product names to compare")
+    p.set_defaults(func=cmd_compare_products)
 
     args = parser.parse_args()
     args.func(args)

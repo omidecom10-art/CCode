@@ -1,11 +1,16 @@
-# AI Ad Agent
+# AI Ad Agent + Product Finder
 
-AI-agent som skapar annonsmanus, analyserar annonser, redigerar video och tar bort vattenmarken. Byggt for att vara sa billigt som mojligt.
+AI-agent som hittar vinnande dropshipping-produkter, skapar annonsmanus, analyserar annonser, redigerar video och tar bort vattenmarken. Byggt for att vara sa billigt som mojligt.
 
 ## Kostnad
 
 | Funktion | Motor | Kostnad per anrop |
 |----------|-------|-------------------|
+| Hitta produkter | Claude Haiku 5.5 | ~$0.002 |
+| Analysera produkt | Claude Haiku 5.5 | ~$0.002 |
+| Produktrapport | Claude Haiku 5.5 | ~$0.003 |
+| Validera produkt | Claude Haiku 5.5 | ~$0.001 |
+| Jamfor produkter | Claude Haiku 5.5 | ~$0.001 |
 | Skriv annonsmanus | Claude Haiku 5.5 | ~$0.001 |
 | Generera hooks | Claude Haiku 5.5 | ~$0.001 |
 | Iterera vinnande manus | Claude Haiku 5.5 | ~$0.001 |
@@ -16,7 +21,7 @@ AI-agent som skapar annonsmanus, analyserar annonser, redigerar video och tar bo
 | Ta bort undertexter | OpenCV (lokalt) | $0.00 |
 | Bildredigering | Pillow (lokalt) | $0.00 |
 
-**Typiskt arbetsflode:** Skriv manus + generera hooks + analysera = ~$0.003 (under 1 cent).
+**Typiskt arbetsflode:** Hitta produkter + analysera + skriv manus + generera hooks = ~$0.007 (under 1 cent).
 
 ALLT anvander Haiku (billigaste modellen). Ingen Sonnet-kostnad alls.
 
@@ -39,9 +44,50 @@ cp .env.example .env
 ### Agent-lage (fritext — routen automatiskt)
 
 ```bash
+python -m cli.main agent "Hitta vinnande produkter inom fitness"
+python -m cli.main agent "Analysera om denna produkt ar bra for dropshipping: posture corrector"
 python -m cli.main agent "Skriv ett 30s TikTok-manus for en hudvardskram"
 python -m cli.main agent "Ta bort vattenmarket fran video.mp4 och trimma till 15 sekunder"
-python -m cli.main agent "Analysera den har annonsen och ge mig 5 nya hooks"
+```
+
+### Hitta vinnande dropshipping-produkter
+
+```bash
+# Hitta 10 produkter i en nisch
+python -m cli.main find-products "fitness och halsa"
+
+# Hitta 5 produkter i en specifik nisch
+python -m cli.main find-products "husdjurstillbehor" -n 5
+```
+
+### Djupanalysera en produkt
+
+```bash
+# Full analys: efterfragan, marginaler, konkurrens, annonsideer, risker
+python -m cli.main analyze-product "posture corrector"
+python -m cli.main analyze-product "LED sunset lamp" --niche "home decor"
+```
+
+### Produktforskningsrapport
+
+```bash
+# Komplett rapport med strategi och handlingsplan
+python -m cli.main product-report "skonhet och hudvard"
+python -m cli.main product-report "kitchen gadgets" --budget 500 -o rapport.md
+```
+
+### Validera en produktide
+
+```bash
+# Snabbvalidering: ar marginalerna tillrackliga?
+python -m cli.main validate-product "massage gun" --price 49.99 --cost 12.00
+```
+
+### Jamfor produkter
+
+```bash
+# Ranka produkter mot varandra
+python -m cli.main compare-products "posture corrector" "massage gun" "LED sunset lamp"
 ```
 
 ### Skriv annonsmanus
@@ -107,14 +153,15 @@ python -m cli.main remove-subtitles -i video.mp4 -o ren.mp4
 
 ```
 agent/
-  orchestrator.py   - Huvudagent som router uppgifter (Haiku, ~$0.0004/anrop)
-  script_writer.py  - Skriver annonsmanus, hooks, variationer (Haiku)
-  planner.py        - Bryter ner komplexa uppgifter i steg (Haiku)
+  orchestrator.py      - Huvudagent som router uppgifter (Haiku, ~$0.0004/anrop)
+  script_writer.py     - Skriver annonsmanus, hooks, variationer (Haiku)
+  planner.py           - Bryter ner komplexa uppgifter i steg (Haiku)
 tools/
-  video_editor.py      - FFmpeg-wrapper (gratis)
-  watermark_remover.py - OpenCV inpainting (gratis)
-  image_processor.py   - Pillow/OpenCV (gratis)
-  ad_analyzer.py       - Annonsanalys (Haiku)
+  product_researcher.py - Hittar och analyserar dropshipping-produkter (Haiku)
+  video_editor.py       - FFmpeg-wrapper (gratis)
+  watermark_remover.py  - OpenCV inpainting (gratis)
+  image_processor.py    - Pillow/OpenCV (gratis)
+  ad_analyzer.py        - Annonsanalys (Haiku)
 ```
 
 100% av LLM-anrop gar genom Haiku (~20x billigare an Sonnet). All mediebearbetning ar lokal och gratis.
