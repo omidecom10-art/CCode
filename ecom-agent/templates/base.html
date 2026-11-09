@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ecom Agent{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='chart.umd.js') }}"></script>
 </head>
 <body class="{{ 'light-mode' if session.get('light_mode') else '' }}">
 
@@ -80,7 +81,7 @@
         function switchStore(storeId) {
             if (storeId) {
                 fetch('/set-store/' + storeId, { method: 'POST' })
-                    .then(() => window.location.reload());
+                    .then(() => { window.location.href = '/'; });
             }
         }
     </script>

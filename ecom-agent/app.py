@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from dotenv import load_dotenv, set_key
 from database import init_db, get_db
+from shopify_client import build_dashboard_data, clear_cache
 
 load_dotenv()
 
@@ -25,7 +26,8 @@ def api_key_configured():
 @app.before_request
 def check_api_key():
     allowed = ["settings", "save_api_key", "add_store", "delete_store",
-               "edit_store", "toggle_dark_mode", "set_store", "static"]
+               "edit_store", "toggle_dark_mode", "set_store", "static",
+               "api_dashboard", "api_refresh"]
     if request.endpoint not in allowed and not api_key_configured():
         flash("Du behöver ange din Anthropic API-nyckel först.", "error")
         return redirect(url_for("settings"))
@@ -38,7 +40,31 @@ def inject_globals():
 
 @app.route("/")
 def dashboard():
-    return render_template("dashboard.html")
+    store_id = session.get("active_store")
+    stores = get_stores()
+    if stores and not store_id:
+        store_id = stores[0]["id"]
+        session["active_store"] = store_id
+    return render_template("dashboard.html", active_store_id=store_id)
+
+
+@app.route("/api/dashboard/<int:store_id>")
+def api_dashboard(store_id):
+    try:
+        data = build_dashboard_data(store_id)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/refresh/<int:store_id>", methods=["POST"])
+def api_refresh(store_id):
+    clear_cache(store_id)
+    try:
+        data = build_dashboard_data(store_id)
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/settings")

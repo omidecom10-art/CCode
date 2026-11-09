@@ -14,12 +14,116 @@
             G&aring; till inst&auml;llningar
         </a>
     </div>
-{% else %}
-    <h2 style="margin-bottom: 24px;">Dashboard</h2>
-    <div class="card">
-        <p style="color: var(--text-muted);">
-            V&auml;lj en sektion i menyn till v&auml;nster f&ouml;r att b&ouml;rja arbeta.
-        </p>
+{% elif not active_store_id %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128073;</div>
+        <h2>V&auml;lj en butik</h2>
+        <p>Anv&auml;nd dropdown-menyn i topbaren f&ouml;r att v&auml;lja vilken butik du vill se.</p>
     </div>
+{% else %}
+    <div class="dashboard-header">
+        <h2>Dashboard</h2>
+        <button class="btn btn-secondary" id="refreshBtn" onclick="refreshDashboard()">
+            &#8635; Uppdatera
+        </button>
+    </div>
+
+    <div id="dashboardLoading" class="card" style="text-align:center; padding:48px;">
+        <p style="color: var(--text-muted);">H&auml;mtar data fr&aring;n Shopify...</p>
+    </div>
+
+    <div id="dashboardError" class="card" style="display:none; text-align:center; padding:48px;">
+        <p style="color: var(--danger);" id="errorMsg"></p>
+        <button class="btn btn-primary" style="margin-top:16px;" onclick="refreshDashboard()">F&ouml;rs&ouml;k igen</button>
+    </div>
+
+    <div id="dashboardContent" style="display:none;">
+        <!-- KPI-kort -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Int&auml;kter idag</div>
+                <div class="kpi-value" id="kpiToday">-</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Denna vecka</div>
+                <div class="kpi-value" id="kpiWeek">-</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Denna m&aring;nad</div>
+                <div class="kpi-value" id="kpiMonth">-</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Antal ordrar</div>
+                <div class="kpi-value" id="kpiOrders">-</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Snittorderv&auml;rde</div>
+                <div class="kpi-value" id="kpiAvg">-</div>
+            </div>
+        </div>
+
+        <!-- Orderstatus -->
+        <div class="card">
+            <h2>Orderstatus</h2>
+            <div class="status-badges" id="statusBadges"></div>
+        </div>
+
+        <!-- Grafer -->
+        <div class="chart-grid">
+            <div class="card">
+                <h2>Int&auml;kter per dag (30 dagar)</h2>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Ordrar per dag (30 dagar)</h2>
+                <div class="chart-container">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top produkter + Lagervarning -->
+        <div class="two-col">
+            <div class="card">
+                <h2>Topp 5 produkter (int&auml;kt)</h2>
+                <div id="topProducts"></div>
+            </div>
+            <div class="card">
+                <h2>Lagervarning (&lt;5 i lager)</h2>
+                <div id="lowStock"></div>
+            </div>
+        </div>
+
+        <!-- Senaste ordrar -->
+        <div class="card">
+            <h2>Senaste 20 ordrar</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Datum</th>
+                            <th>Kund</th>
+                            <th>Produkter</th>
+                            <th>Summa</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if active_store_id %}
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+<script>
+    loadDashboard({{ active_store_id }});
+</script>
 {% endif %}
 {% endblock %}

@@ -51,6 +51,16 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE SET NULL
         );
+
+        CREATE TABLE IF NOT EXISTS api_cache (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            store_id INTEGER NOT NULL,
+            cache_key TEXT NOT NULL,
+            data TEXT NOT NULL,
+            cached_at TIMESTAMP NOT NULL,
+            UNIQUE(store_id, cache_key),
+            FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+        );
     """)
     conn.commit()
     conn.close()
