@@ -41,12 +41,13 @@
             <input type="text" id="store_name" name="name" required placeholder="Min butik">
         </div>
         <div class="form-group">
-            <label for="store_url">Shopify URL</label>
-            <input type="text" id="store_url" name="url" required placeholder="min-butik.myshopify.com">
+            <label for="store_url">Shopify URL <span style="color:var(--text-muted);font-weight:normal;">(valfritt)</span></label>
+            <input type="text" id="store_url" name="url" placeholder="min-butik.myshopify.com">
         </div>
         <div class="form-group">
-            <label for="store_token">Admin API-token</label>
-            <input type="password" id="store_token" name="shopify_token" required placeholder="shpat_...">
+            <label for="store_token">Admin API-token <span style="color:var(--text-muted);font-weight:normal;">(valfritt)</span></label>
+            <input type="password" id="store_token" name="shopify_token" placeholder="shpat_...">
+            <small style="color:var(--text-muted);display:block;margin-top:4px;">Utan token kan du hantera produkter och ordrar manuellt.</small>
         </div>
         <button type="submit" class="btn btn-primary">L&auml;gg till butik</button>
     </form>
@@ -90,12 +91,12 @@
                 <input type="text" name="name" id="editName" required>
             </div>
             <div class="form-group">
-                <label>Shopify URL</label>
-                <input type="text" name="url" id="editUrl" required>
+                <label>Shopify URL <span style="color:var(--text-muted);font-weight:normal;">(valfritt)</span></label>
+                <input type="text" name="url" id="editUrl">
             </div>
             <div class="form-group">
-                <label>Admin API-token</label>
-                <input type="password" name="shopify_token" id="editToken" required>
+                <label>Admin API-token <span style="color:var(--text-muted);font-weight:normal;">(valfritt)</span></label>
+                <input type="password" name="shopify_token" id="editToken">
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Avbryt</button>

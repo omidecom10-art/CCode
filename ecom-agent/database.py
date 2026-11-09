@@ -62,6 +62,37 @@ def init_db():
             UNIQUE(store_id, cache_key),
             FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
         );
+
+        CREATE TABLE IF NOT EXISTS local_products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            store_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            price REAL DEFAULT 0,
+            cost REAL DEFAULT 0,
+            inventory INTEGER DEFAULT 0,
+            sku TEXT DEFAULT '',
+            status TEXT DEFAULT 'active',
+            vendor TEXT DEFAULT '',
+            product_type TEXT DEFAULT '',
+            image_url TEXT DEFAULT '',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS local_orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            store_id INTEGER NOT NULL,
+            order_number INTEGER,
+            customer_name TEXT DEFAULT '',
+            customer_email TEXT DEFAULT '',
+            total REAL DEFAULT 0,
+            currency TEXT DEFAULT 'SEK',
+            fulfillment_status TEXT DEFAULT 'unfulfilled',
+            financial_status TEXT DEFAULT 'paid',
+            items_json TEXT DEFAULT '[]',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE
+        );
     """)
     conn.commit()
 

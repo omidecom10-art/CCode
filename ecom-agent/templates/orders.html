@@ -5,8 +5,8 @@
 {% if not stores %}
     <div class="card onboarding">
         <div class="onboarding-icon">&#128230;</div>
-        <h2>Inga butiker kopplade</h2>
-        <p>Koppla en butik i inst&auml;llningarna f&ouml;r att se ordrar.</p>
+        <h2>Inga butiker tillagda</h2>
+        <p>L&auml;gg till en butik i inst&auml;llningarna f&ouml;r att komma ig&aring;ng.</p>
         <a href="{{ url_for('settings') }}" class="btn btn-primary">G&aring; till inst&auml;llningar</a>
     </div>
 {% elif not active_store_id %}
@@ -18,6 +18,7 @@
 {% else %}
     <div class="dashboard-header">
         <h2>Ordrar</h2>
+        <button class="btn btn-primary" onclick="openAddOrder()">+ L&auml;gg till order</button>
     </div>
 
     <!-- Filter -->
@@ -75,6 +76,44 @@
             </div>
 
             <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- L&auml;gg till order modal -->
+    <div class="modal-overlay" id="addOrderModal">
+        <div class="modal">
+            <h3>L&auml;gg till order</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                    <label>Kundnamn</label>
+                    <input type="text" id="noCustomer" placeholder="Anna Svensson">
+                </div>
+                <div class="form-group">
+                    <label>E-post</label>
+                    <input type="email" id="noEmail" placeholder="anna@exempel.se">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Produkter (en per rad: namn, antal, pris)</label>
+                <textarea id="noItems" rows="3" placeholder="T-shirt, 2, 299&#10;Jeans, 1, 599"></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                    <label>Totalsumma (kr)</label>
+                    <input type="number" id="noTotal" value="0" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="noStatus">
+                        <option value="unfulfilled">Ej uppfylld</option>
+                        <option value="fulfilled">Uppfylld</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeAddOrder()">Avbryt</button>
+                <button class="btn btn-primary" onclick="saveOrder()">Spara</button>
+            </div>
         </div>
     </div>
 {% endif %}

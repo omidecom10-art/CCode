@@ -3,8 +3,10 @@ let filteredOrders = [];
 let currentPage = 1;
 const perPage = 50;
 let expandedRow = null;
+let currentStoreId = null;
 
 function initOrders(storeId) {
+    currentStoreId = storeId;
     fetch('/api/orders/' + storeId)
         .then(r => r.json())
         .then(data => {
@@ -65,7 +67,7 @@ function renderOrders() {
     const page = filteredOrders.slice(start, start + perPage);
 
     if (page.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;" class="muted">Inga ordrar matchar filtret.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;" class="muted">Inga ordrar ännu. Klicka "+ Lägg till order" för att börja.</td></tr>';
         document.getElementById('pagination').innerHTML = '';
         return;
     }
@@ -131,7 +133,13 @@ function renderOrderDetail(o) {
             '</div>';
         html += '</div>';
     });
-    html += '</div></div>';
+    html += '</div>';
+
+    html += '<div style="margin-top:16px;display:flex;gap:8px;">';
+    html += '<button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteOrder(' + o.id + ')">Ta bort order</button>';
+    html += '</div>';
+
+    html += '</div>';
     return html;
 }
 
@@ -172,6 +180,69 @@ function goPage(p) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// --- Add order ---
+
+function openAddOrder() {
+    document.getElementById('noCustomer').value = '';
+    document.getElementById('noEmail').value = '';
+    document.getElementById('noItems').value = '';
+    document.getElementById('noTotal').value = '0';
+    document.getElementById('noStatus').value = 'unfulfilled';
+    document.getElementById('addOrderModal').classList.add('active');
+}
+
+function closeAddOrder() {
+    document.getElementById('addOrderModal').classList.remove('active');
+}
+
+function saveOrder() {
+    const itemsRaw = document.getElementById('noItems').value.trim();
+    const items = [];
+    if (itemsRaw) {
+        itemsRaw.split('\n').forEach(line => {
+            const parts = line.split(',').map(s => s.trim());
+            if (parts[0]) {
+                items.push({
+                    title: parts[0],
+                    quantity: parseInt(parts[1]) || 1,
+                    price: parts[2] || '0',
+                    sku: '',
+                    image: '',
+                });
+            }
+        });
+    }
+
+    const body = {
+        store_id: currentStoreId,
+        customer_name: document.getElementById('noCustomer').value.trim(),
+        customer_email: document.getElementById('noEmail').value.trim(),
+        total: parseFloat(document.getElementById('noTotal').value) || 0,
+        fulfillment_status: document.getElementById('noStatus').value,
+        items: items,
+    };
+
+    fetch('/api/local/orders', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) { alert(data.error); return; }
+        closeAddOrder();
+        initOrders(currentStoreId);
+    })
+    .catch(err => alert('Fel: ' + err.message));
+}
+
+function deleteOrder(id) {
+    if (!confirm('Ta bort denna order?')) return;
+    fetch('/api/local/orders/' + id, { method: 'DELETE' })
+        .then(() => initOrders(currentStoreId))
+        .catch(err => alert('Fel: ' + err.message));
+}
+
 function fmt(n) {
     return new Intl.NumberFormat('sv-SE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 }
@@ -186,3 +257,9 @@ function capitalize(s) {
     if (!s) return '';
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+    }
+});

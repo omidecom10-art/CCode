@@ -16,6 +16,11 @@ def _get_store(store_id):
     return store
 
 
+def _store_has_shopify(store):
+    return bool(store["shopify_token"] and store["shopify_token"].strip()
+                and store["url"] and store["url"].strip())
+
+
 def _api_url(store_url, endpoint):
     url = store_url.rstrip("/")
     if not url.startswith("https://"):
@@ -111,13 +116,123 @@ def _paginated_get(store, endpoint, resource_key, params=None):
     return all_items
 
 
+# --- Local data functions (no Shopify token) ---
+
+def _get_local_products(store_id):
+    db = get_db()
+    rows = db.execute(
+        "SELECT * FROM local_products WHERE store_id=? ORDER BY created_at DESC",
+        (store_id,),
+    ).fetchall()
+    db.close()
+    products = []
+    for r in rows:
+        products.append({
+            "id": r["id"],
+            "title": r["title"],
+            "image": {"src": r["image_url"]} if r["image_url"] else None,
+            "images": [],
+            "status": r["status"],
+            "vendor": r["vendor"],
+            "product_type": r["product_type"],
+            "variants": [{
+                "price": str(r["price"]),
+                "inventory_quantity": r["inventory"],
+                "sku": r["sku"],
+                "title": "Standard",
+            }],
+        })
+    return products
+
+
+def _get_local_orders(store_id, days=30):
+    db = get_db()
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+    rows = db.execute(
+        "SELECT * FROM local_orders WHERE store_id=? AND created_at >= ? ORDER BY created_at DESC",
+        (store_id, since),
+    ).fetchall()
+    db.close()
+    orders = []
+    for r in rows:
+        items = json.loads(r["items_json"]) if r["items_json"] else []
+        created = r["created_at"] or datetime.now(timezone.utc).isoformat()
+        if "T" not in created:
+            created = created.replace(" ", "T") + "+00:00"
+        elif "+" not in created and "Z" not in created:
+            created += "+00:00"
+
+        name_parts = (r["customer_name"] or "").split(None, 1)
+        first = name_parts[0] if name_parts else ""
+        last = name_parts[1] if len(name_parts) > 1 else ""
+
+        orders.append({
+            "id": r["id"],
+            "order_number": r["order_number"] or r["id"],
+            "created_at": created,
+            "customer": {
+                "first_name": first,
+                "last_name": last,
+                "email": r["customer_email"] or "",
+            },
+            "line_items": items,
+            "total_price": str(r["total"]),
+            "currency": r["currency"] or "SEK",
+            "fulfillment_status": r["fulfillment_status"],
+            "financial_status": r["financial_status"],
+            "gateway": "",
+            "shipping_address": {},
+        })
+    return orders
+
+
+def _get_local_order(store_id, order_id):
+    db = get_db()
+    row = db.execute(
+        "SELECT * FROM local_orders WHERE id=? AND store_id=?",
+        (order_id, store_id),
+    ).fetchone()
+    db.close()
+    if not row:
+        return {}
+    items = json.loads(row["items_json"]) if row["items_json"] else []
+    created = row["created_at"] or datetime.now(timezone.utc).isoformat()
+    if "T" not in created:
+        created = created.replace(" ", "T") + "+00:00"
+    elif "+" not in created and "Z" not in created:
+        created += "+00:00"
+
+    name_parts = (row["customer_name"] or "").split(None, 1)
+    first = name_parts[0] if name_parts else ""
+    last = name_parts[1] if len(name_parts) > 1 else ""
+
+    return {
+        "id": row["id"],
+        "order_number": row["order_number"] or row["id"],
+        "created_at": created,
+        "customer": {"first_name": first, "last_name": last, "email": row["customer_email"] or ""},
+        "line_items": items,
+        "total_price": str(row["total"]),
+        "currency": row["currency"] or "SEK",
+        "fulfillment_status": row["fulfillment_status"],
+        "financial_status": row["financial_status"],
+        "gateway": "",
+        "shipping_address": {},
+    }
+
+
+# --- Public API (auto-dispatches local vs Shopify) ---
+
 def get_orders(store_id, days=30, status="any"):
+    store = _get_store(store_id)
+    if not _store_has_shopify(store):
+        return _get_local_orders(store_id, days)
+
     cache_key = f"orders_{days}_{status}"
     cached = _get_cached(store_id, cache_key)
     if cached is not None:
         return cached
 
-    store = _get_store(store_id)
     since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
     params = {
         "status": status,
@@ -130,24 +245,30 @@ def get_orders(store_id, days=30, status="any"):
 
 
 def get_products(store_id):
+    store = _get_store(store_id)
+    if not _store_has_shopify(store):
+        return _get_local_products(store_id)
+
     cache_key = "products"
     cached = _get_cached(store_id, cache_key)
     if cached is not None:
         return cached
 
-    store = _get_store(store_id)
     products = _paginated_get(store, "products", "products", {"limit": 250})
     _set_cache(store_id, cache_key, products)
     return products
 
 
 def get_order(store_id, order_id):
+    store = _get_store(store_id)
+    if not _store_has_shopify(store):
+        return _get_local_order(store_id, order_id)
+
     cache_key = f"order_{order_id}"
     cached = _get_cached(store_id, cache_key)
     if cached is not None:
         return cached
 
-    store = _get_store(store_id)
     data = _shopify_get(store, f"orders/{order_id}")
     order = data.get("order", {})
     _set_cache(store_id, cache_key, order)

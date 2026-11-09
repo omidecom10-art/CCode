@@ -6,6 +6,7 @@ from shopify_client import build_dashboard_data, clear_cache, get_orders, get_pr
 from ai_agent import EcomAgent
 from calculators import margin_calculator, pricing_suggestion
 import anthropic
+import json
 
 load_dotenv()
 
@@ -37,7 +38,10 @@ def check_api_key():
                "projects_page", "project_detail", "api_projects_list",
                "api_projects_create", "api_project_update", "api_project_delete",
                "api_project_tasks_create", "api_task_update", "api_task_delete",
-               "tools_page", "api_tools_swot", "api_tools_copy"]
+               "tools_page", "api_tools_swot", "api_tools_copy",
+               "api_local_products_create", "api_local_products_update",
+               "api_local_products_delete", "api_local_orders_create",
+               "api_local_orders_update", "api_local_orders_delete"]
     if request.endpoint not in allowed and not api_key_configured():
         flash("Du behöver ange din Anthropic API-nyckel först.", "error")
         return redirect(url_for("settings"))
@@ -456,6 +460,125 @@ Ge ett färdigt, publiceringsklart resultat. Använd markdown-formatering."""
         return jsonify({"error": str(e)}), 500
 
 
+# --- Local product CRUD ---
+
+@app.route("/api/local/products", methods=["POST"])
+def api_local_products_create():
+    data = request.get_json() or {}
+    store_id = data.get("store_id")
+    title = data.get("title", "").strip()
+    if not title or not store_id:
+        return jsonify({"error": "Titel och butik krävs."}), 400
+    db = get_db()
+    cur = db.execute(
+        """INSERT INTO local_products (store_id, title, price, cost, inventory, sku, vendor, status, image_url)
+           VALUES (?,?,?,?,?,?,?,?,?)""",
+        (store_id, title,
+         float(data.get("price", 0)),
+         float(data.get("cost", 0)),
+         int(data.get("inventory", 0)),
+         data.get("sku", ""),
+         data.get("vendor", ""),
+         data.get("status", "active"),
+         data.get("image_url", "")),
+    )
+    db.commit()
+    pid = cur.lastrowid
+    db.close()
+    return jsonify({"id": pid}), 201
+
+
+@app.route("/api/local/products/<int:product_id>", methods=["PATCH"])
+def api_local_products_update(product_id):
+    data = request.get_json() or {}
+    db = get_db()
+    fields = {}
+    for key in ("title", "price", "cost", "inventory", "sku", "vendor", "status", "image_url"):
+        if key in data:
+            fields[key] = data[key]
+    if fields:
+        set_clause = ", ".join(f"{k}=?" for k in fields)
+        values = list(fields.values()) + [product_id]
+        db.execute(f"UPDATE local_products SET {set_clause} WHERE id=?", values)
+        db.commit()
+    db.close()
+    return "", 204
+
+
+@app.route("/api/local/products/<int:product_id>", methods=["DELETE"])
+def api_local_products_delete(product_id):
+    db = get_db()
+    db.execute("DELETE FROM local_products WHERE id=?", (product_id,))
+    db.commit()
+    db.close()
+    return "", 204
+
+
+# --- Local order CRUD ---
+
+@app.route("/api/local/orders", methods=["POST"])
+def api_local_orders_create():
+    data = request.get_json() or {}
+    store_id = data.get("store_id")
+    if not store_id:
+        return jsonify({"error": "Butik krävs."}), 400
+
+    db = get_db()
+    next_num = db.execute(
+        "SELECT COALESCE(MAX(order_number), 1000) + 1 FROM local_orders WHERE store_id=?",
+        (store_id,),
+    ).fetchone()[0]
+
+    items = data.get("items", [])
+    items_json = json.dumps(items) if items else "[]"
+
+    cur = db.execute(
+        """INSERT INTO local_orders
+           (store_id, order_number, customer_name, customer_email, total, currency,
+            fulfillment_status, financial_status, items_json)
+           VALUES (?,?,?,?,?,?,?,?,?)""",
+        (store_id, next_num,
+         data.get("customer_name", ""),
+         data.get("customer_email", ""),
+         float(data.get("total", 0)),
+         data.get("currency", "SEK"),
+         data.get("fulfillment_status", "unfulfilled"),
+         data.get("financial_status", "paid"),
+         items_json),
+    )
+    db.commit()
+    oid = cur.lastrowid
+    db.close()
+    return jsonify({"id": oid, "order_number": next_num}), 201
+
+
+@app.route("/api/local/orders/<int:order_id>", methods=["PATCH"])
+def api_local_orders_update(order_id):
+    data = request.get_json() or {}
+    db = get_db()
+    fields = {}
+    for key in ("customer_name", "customer_email", "total", "currency",
+                "fulfillment_status", "financial_status"):
+        if key in data:
+            fields[key] = data[key]
+    if fields:
+        set_clause = ", ".join(f"{k}=?" for k in fields)
+        values = list(fields.values()) + [order_id]
+        db.execute(f"UPDATE local_orders SET {set_clause} WHERE id=?", values)
+        db.commit()
+    db.close()
+    return "", 204
+
+
+@app.route("/api/local/orders/<int:order_id>", methods=["DELETE"])
+def api_local_orders_delete(order_id):
+    db = get_db()
+    db.execute("DELETE FROM local_orders WHERE id=?", (order_id,))
+    db.commit()
+    db.close()
+    return "", 204
+
+
 @app.route("/settings")
 def settings():
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -485,14 +608,14 @@ def add_store():
     url = request.form.get("url", "").strip()
     token = request.form.get("shopify_token", "").strip()
 
-    if not all([name, url, token]):
-        flash("Alla fält måste fyllas i.", "error")
+    if not name:
+        flash("Butiksnamn krävs.", "error")
         return redirect(url_for("settings"))
 
     db = get_db()
     db.execute(
         "INSERT INTO stores (name, url, shopify_token) VALUES (?, ?, ?)",
-        (name, url, token),
+        (name, url or "", token or ""),
     )
     db.commit()
     db.close()
@@ -506,14 +629,14 @@ def edit_store(store_id):
     url = request.form.get("url", "").strip()
     token = request.form.get("shopify_token", "").strip()
 
-    if not all([name, url, token]):
-        flash("Alla fält måste fyllas i.", "error")
+    if not name:
+        flash("Butiksnamn krävs.", "error")
         return redirect(url_for("settings"))
 
     db = get_db()
     db.execute(
         "UPDATE stores SET name=?, url=?, shopify_token=? WHERE id=?",
-        (name, url, token, store_id),
+        (name, url or "", token or "", store_id),
     )
     db.commit()
     db.close()

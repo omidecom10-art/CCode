@@ -1,6 +1,8 @@
 let allProducts = [];
+let currentStoreId = null;
 
 function initProducts(storeId) {
+    currentStoreId = storeId;
     fetch('/api/products/' + storeId)
         .then(r => r.json())
         .then(data => {
@@ -48,7 +50,7 @@ function renderProducts(products) {
 
     if (products.length === 0) {
         grid.innerHTML = '<div class="card" style="text-align:center;padding:48px;grid-column:1/-1;">' +
-            '<p class="muted">Inga produkter matchar sökningen.</p></div>';
+            '<p class="muted">Inga produkter ännu. Klicka "+ Lägg till produkt" för att börja.</p></div>';
         return;
     }
 
@@ -79,10 +81,60 @@ function renderProducts(products) {
         if (p.variants_count > 1) {
             html += '<span class="muted">' + p.variants_count + ' varianter</span>';
         }
+        html += '<button class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="deleteProduct(' + p.id + ')">Ta bort</button>';
         html += '</div></div></div>';
     });
 
     grid.innerHTML = html;
+}
+
+function openAddProduct() {
+    document.getElementById('npTitle').value = '';
+    document.getElementById('npPrice').value = '0';
+    document.getElementById('npCost').value = '0';
+    document.getElementById('npInventory').value = '0';
+    document.getElementById('npSku').value = '';
+    document.getElementById('npVendor').value = '';
+    document.getElementById('addProductModal').classList.add('active');
+}
+
+function closeAddProduct() {
+    document.getElementById('addProductModal').classList.remove('active');
+}
+
+function saveProduct() {
+    const title = document.getElementById('npTitle').value.trim();
+    if (!title) { alert('Produktnamn krävs.'); return; }
+
+    const body = {
+        store_id: currentStoreId,
+        title: title,
+        price: parseFloat(document.getElementById('npPrice').value) || 0,
+        cost: parseFloat(document.getElementById('npCost').value) || 0,
+        inventory: parseInt(document.getElementById('npInventory').value) || 0,
+        sku: document.getElementById('npSku').value.trim(),
+        vendor: document.getElementById('npVendor').value.trim(),
+    };
+
+    fetch('/api/local/products', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body),
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) { alert(data.error); return; }
+        closeAddProduct();
+        initProducts(currentStoreId);
+    })
+    .catch(err => alert('Fel: ' + err.message));
+}
+
+function deleteProduct(id) {
+    if (!confirm('Ta bort denna produkt?')) return;
+    fetch('/api/local/products/' + id, { method: 'DELETE' })
+        .then(() => initProducts(currentStoreId))
+        .catch(err => alert('Fel: ' + err.message));
 }
 
 function fmt(n) {
@@ -94,3 +146,9 @@ function esc(s) {
     d.textContent = s;
     return d.innerHTML;
 }
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+    }
+});
