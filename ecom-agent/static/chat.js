@@ -1,9 +1,126 @@
 let currentChannel = null;
+let voiceMode = false;
+let recognition = null;
+let isListening = false;
+let synth = window.speechSynthesis;
+let svVoice = null;
 
 function initChat(channel) {
     currentChannel = channel;
     loadHistory();
     loadConversations();
+    initVoice();
+}
+
+function initVoice() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition || !synth) {
+        document.getElementById('voiceUnsupported').style.display = 'inline';
+        document.getElementById('voiceToggle').style.display = 'none';
+        document.getElementById('micBtn').style.display = 'none';
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'sv-SE';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = function(e) {
+        const text = e.results[0][0].transcript;
+        document.getElementById('chatInput').value = text;
+        stopListening();
+        sendMessage();
+    };
+
+    recognition.onerror = function(e) {
+        stopListening();
+        if (e.error !== 'no-speech' && e.error !== 'aborted') {
+            console.warn('Speech error:', e.error);
+        }
+    };
+
+    recognition.onend = function() {
+        stopListening();
+    };
+
+    pickSwedishVoice();
+    synth.onvoiceschanged = pickSwedishVoice;
+}
+
+function pickSwedishVoice() {
+    const voices = synth.getVoices();
+    svVoice = voices.find(v => v.lang === 'sv-SE')
+        || voices.find(v => v.lang.startsWith('sv'))
+        || null;
+}
+
+function toggleVoiceMode(on) {
+    voiceMode = on;
+    if (!on && synth.speaking) synth.cancel();
+}
+
+function toggleMic() {
+    if (!recognition) return;
+    if (isListening) {
+        recognition.abort();
+        stopListening();
+    } else {
+        startListening();
+    }
+}
+
+function startListening() {
+    if (!recognition) return;
+    isListening = true;
+    const btn = document.getElementById('micBtn');
+    btn.classList.add('listening');
+    try { recognition.start(); } catch (e) {}
+}
+
+function stopListening() {
+    isListening = false;
+    const btn = document.getElementById('micBtn');
+    if (btn) btn.classList.remove('listening');
+}
+
+function speakText(text) {
+    if (!synth) return;
+    synth.cancel();
+    const clean = text.replace(/```[\s\S]*?```/g, '')
+        .replace(/`[^`]+`/g, '')
+        .replace(/\*\*(.+?)\*\*/g, '$1')
+        .replace(/\*(.+?)\*/g, '$1')
+        .replace(/^#{1,4}\s+/gm, '')
+        .replace(/\|[^|]+\|/g, '')
+        .replace(/[-]+/g, ' ')
+        .replace(/\n/g, '. ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    if (!clean) return;
+
+    const maxLen = 200;
+    const chunks = [];
+    let remaining = clean;
+    while (remaining.length > 0) {
+        if (remaining.length <= maxLen) {
+            chunks.push(remaining);
+            break;
+        }
+        let cut = remaining.lastIndexOf('. ', maxLen);
+        if (cut === -1 || cut < 50) cut = remaining.lastIndexOf(' ', maxLen);
+        if (cut === -1) cut = maxLen;
+        chunks.push(remaining.slice(0, cut + 1));
+        remaining = remaining.slice(cut + 1);
+    }
+
+    chunks.forEach(chunk => {
+        const utter = new SpeechSynthesisUtterance(chunk);
+        utter.lang = 'sv-SE';
+        if (svVoice) utter.voice = svVoice;
+        utter.rate = 1;
+        synth.speak(utter);
+    });
 }
 
 function switchChannel(val) {
@@ -40,7 +157,7 @@ function loadHistory() {
                 document.getElementById('chatMsgCount').textContent = '';
                 return;
             }
-            messages.forEach(m => appendMessage(m.role, m.content));
+            messages.forEach(m => appendMessage(m.role, m.content, false));
             document.getElementById('chatMsgCount').textContent = messages.length + ' meddelanden';
             scrollToBottom();
         });
@@ -131,7 +248,7 @@ function sendMessage() {
         });
 }
 
-function appendMessage(role, content) {
+function appendMessage(role, content, autoSpeak) {
     const welcome = document.getElementById('chatWelcome');
     if (welcome) welcome.remove();
 
@@ -141,6 +258,17 @@ function appendMessage(role, content) {
 
     if (role === 'assistant') {
         bubble.innerHTML = renderMarkdown(content);
+
+        const speakerBtn = document.createElement('button');
+        speakerBtn.className = 'bubble-speak-btn';
+        speakerBtn.title = 'Läs upp';
+        speakerBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+        speakerBtn.onclick = function() { speakText(content); };
+        bubble.appendChild(speakerBtn);
+
+        if (autoSpeak !== false && voiceMode && synth) {
+            speakText(content);
+        }
     } else {
         bubble.textContent = content;
     }

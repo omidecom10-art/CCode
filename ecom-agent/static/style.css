@@ -1348,6 +1348,112 @@ a:hover {
     text-align: right;
 }
 
+/* Voice controls */
+.chat-voice-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.voice-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.voice-toggle input { display: none; }
+
+.voice-toggle-track {
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    position: relative;
+    transition: background 0.2s;
+}
+
+.voice-toggle input:checked + .voice-toggle-track {
+    background: var(--accent);
+}
+
+.voice-toggle-thumb {
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.2s;
+}
+
+.voice-toggle input:checked + .voice-toggle-track .voice-toggle-thumb {
+    left: 18px;
+}
+
+.voice-toggle-label {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.voice-unsupported {
+    font-size: 12px;
+    color: var(--danger);
+}
+
+.chat-mic-btn {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.chat-mic-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.chat-mic-btn.listening {
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+    animation: micPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(108, 92, 231, 0); }
+}
+
+.bubble-speak-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    margin-top: 8px;
+    transition: color 0.15s;
+}
+
+.bubble-speak-btn:hover {
+    color: var(--accent);
+}
+
 /* Chat mobile */
 @media (max-width: 768px) {
     .chat-sidebar {
