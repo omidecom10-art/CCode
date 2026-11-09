@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Projekt - Ecom Agent{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>Projekt</h2>
+    <button class="btn btn-primary" onclick="openNewProjectModal()">+ Nytt projekt</button>
+</div>
+
+<div class="kanban-board" id="kanbanBoard">
+    <div class="kanban-col" data-status="ide">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#f1c40f"></span>
+            <span>Id&eacute;</span>
+            <span class="kanban-col-count" id="count-ide">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="ide" id="col-ide"></div>
+    </div>
+    <div class="kanban-col" data-status="research">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#3498db"></span>
+            <span>Research</span>
+            <span class="kanban-col-count" id="count-research">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="research" id="col-research"></div>
+    </div>
+    <div class="kanban-col" data-status="bygger">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#6C5CE7"></span>
+            <span>Bygger</span>
+            <span class="kanban-col-count" id="count-bygger">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="bygger" id="col-bygger"></div>
+    </div>
+    <div class="kanban-col" data-status="live">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#2ecc71"></span>
+            <span>Live</span>
+            <span class="kanban-col-count" id="count-live">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="live" id="col-live"></div>
+    </div>
+    <div class="kanban-col" data-status="pausad">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#e67e22"></span>
+            <span>Pausad</span>
+            <span class="kanban-col-count" id="count-pausad">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="pausad" id="col-pausad"></div>
+    </div>
+    <div class="kanban-col" data-status="skrotad">
+        <div class="kanban-col-header">
+            <span class="kanban-col-dot" style="background:#e74c3c"></span>
+            <span>Skrotad</span>
+            <span class="kanban-col-count" id="count-skrotad">0</span>
+        </div>
+        <div class="kanban-col-body" data-status="skrotad" id="col-skrotad"></div>
+    </div>
+</div>
+
+<!-- New project modal -->
+<div class="modal-overlay" id="newProjectModal">
+    <div class="modal">
+        <h3>Nytt projekt</h3>
+        <div class="form-group">
+            <label>Namn *</label>
+            <input type="text" id="npName" placeholder="Projektnamn...">
+        </div>
+        <div class="form-group">
+            <label>Beskrivning</label>
+            <textarea id="npDesc" rows="3" placeholder="Kort beskrivning..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="npStatus">
+                <option value="ide">Id&eacute;</option>
+                <option value="research">Research</option>
+                <option value="bygger">Bygger</option>
+                <option value="live">Live</option>
+                <option value="pausad">Pausad</option>
+                <option value="skrotad">Skrotad</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Budget (kr)</label>
+            <input type="number" id="npBudget" placeholder="0">
+        </div>
+        <div class="form-group">
+            <label>Deadline</label>
+            <input type="date" id="npDeadline">
+        </div>
+        <div class="form-group">
+            <label>Koppla till butik</label>
+            <select id="npStore">
+                <option value="">Ingen</option>
+                {% for store in stores %}
+                    <option value="{{ store.id }}">{{ store.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeNewProjectModal()">Avbryt</button>
+            <button class="btn btn-primary" onclick="createProject()">Skapa</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='projects.js') }}"></script>
+<script>initProjects();</script>
+{% endblock %}

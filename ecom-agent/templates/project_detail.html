@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ project.name }} - Ecom Agent{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div>
+        <a href="{{ url_for('projects_page') }}" class="back-link">&larr; Tillbaka till projekt</a>
+        <h2 id="projectTitle">{{ project.name }}</h2>
+    </div>
+    <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger btn-sm" onclick="confirmDeleteProject({{ project.id }})">Ta bort</button>
+    </div>
+</div>
+
+<div class="project-detail-grid">
+    <!-- Left: info + notes -->
+    <div class="project-detail-left">
+        <div class="card">
+            <h3 style="margin-bottom:16px;">Projektinfo</h3>
+            <div class="form-group">
+                <label>Namn</label>
+                <input type="text" id="pdName" value="{{ project.name }}" onchange="saveProjectField()">
+            </div>
+            <div class="form-group">
+                <label>Beskrivning</label>
+                <textarea id="pdDesc" rows="3" onchange="saveProjectField()">{{ project.description or '' }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="pdStatus" onchange="saveProjectField()">
+                    <option value="ide" {{ 'selected' if project.status == 'ide' }}>Id&eacute;</option>
+                    <option value="research" {{ 'selected' if project.status == 'research' }}>Research</option>
+                    <option value="bygger" {{ 'selected' if project.status == 'bygger' }}>Bygger</option>
+                    <option value="live" {{ 'selected' if project.status == 'live' }}>Live</option>
+                    <option value="pausad" {{ 'selected' if project.status == 'pausad' }}>Pausad</option>
+                    <option value="skrotad" {{ 'selected' if project.status == 'skrotad' }}>Skrotad</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="form-group">
+                    <label>Budget (kr)</label>
+                    <input type="number" id="pdBudget" value="{{ project.budget or '' }}" onchange="saveProjectField()">
+                </div>
+                <div class="form-group">
+                    <label>Deadline</label>
+                    <input type="date" id="pdDeadline" value="{{ project.deadline or '' }}" onchange="saveProjectField()">
+                </div>
+            </div>
+            {% if project.store_id %}
+            <div style="margin-top:8px;">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-secondary">&#9632; G&aring; till butikens dashboard</a>
+            </div>
+            {% endif %}
+            <div class="pd-save-indicator" id="saveIndicator"></div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom:12px;">Anteckningar</h3>
+            <textarea id="pdNotes" class="pd-notes" rows="8" placeholder="Skriv fritt h&auml;r...">{{ project.notes or '' }}</textarea>
+            <div class="pd-save-indicator" id="notesSaveIndicator"></div>
+        </div>
+    </div>
+
+    <!-- Right: tasks -->
+    <div class="project-detail-right">
+        <div class="card">
+            <div class="pd-tasks-header">
+                <h3>Checklista</h3>
+                <span class="muted" id="taskProgress"></span>
+            </div>
+            <div class="pd-task-input">
+                <input type="text" id="newTaskInput" placeholder="Ny uppgift..." onkeydown="if(event.key==='Enter')addTask()">
+                <button class="btn btn-sm btn-primary" onclick="addTask()">L&auml;gg till</button>
+            </div>
+            <div id="taskList" class="pd-task-list"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>Ta bort projekt?</h3>
+        <p style="color:var(--text-muted);margin-bottom:16px;">Alla uppgifter kopplade till detta projekt tas ocks&aring; bort. Denna &aring;tg&auml;rd kan inte &aring;ngras.</p>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeDeleteModal()">Avbryt</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn">Ta bort</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const PROJECT_ID = {{ project.id }};
+</script>
+<script src="{{ url_for('static', filename='projects.js') }}"></script>
+<script>initProjectDetail();</script>
+{% endblock %}

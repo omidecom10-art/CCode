@@ -31,7 +31,10 @@ def check_api_key():
                "api_dashboard", "api_refresh", "api_orders",
                "api_order_detail", "api_products",
                "chat", "api_chat", "api_chat_history", "api_chat_conversations",
-               "api_chat_clear"]
+               "api_chat_clear",
+               "projects_page", "project_detail", "api_projects_list",
+               "api_projects_create", "api_project_update", "api_project_delete",
+               "api_project_tasks_create", "api_task_update", "api_task_delete"]
     if request.endpoint not in allowed and not api_key_configured():
         flash("Du behöver ange din Anthropic API-nyckel först.", "error")
         return redirect(url_for("settings"))
@@ -177,6 +180,149 @@ def api_products(store_id):
         return jsonify(products_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/projects")
+def projects_page():
+    return render_template("projects.html")
+
+
+@app.route("/projects/<int:project_id>")
+def project_detail(project_id):
+    db = get_db()
+    project = db.execute("SELECT * FROM projects WHERE id=?", (project_id,)).fetchone()
+    db.close()
+    if not project:
+        flash("Projektet hittades inte.", "error")
+        return redirect(url_for("projects_page"))
+    return render_template("project_detail.html", project=project)
+
+
+@app.route("/api/projects", methods=["GET"])
+def api_projects_list():
+    db = get_db()
+    rows = db.execute("""
+        SELECT p.*,
+            (SELECT COUNT(*) FROM tasks WHERE project_id=p.id) AS tasks_total,
+            (SELECT COUNT(*) FROM tasks WHERE project_id=p.id AND done=1) AS tasks_done
+        FROM projects p ORDER BY p.created_at DESC
+    """).fetchall()
+    db.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/api/projects", methods=["POST"])
+def api_projects_create():
+    data = request.get_json() or {}
+    name = data.get("name", "").strip()
+    if not name:
+        return jsonify({"error": "Namn krävs."}), 400
+
+    db = get_db()
+    cur = db.execute(
+        "INSERT INTO projects (name, description, status, budget, deadline, store_id) VALUES (?,?,?,?,?,?)",
+        (
+            name,
+            data.get("description", ""),
+            data.get("status", "ide"),
+            data.get("budget"),
+            data.get("deadline"),
+            data.get("store_id"),
+        ),
+    )
+    db.commit()
+    pid = cur.lastrowid
+    db.close()
+    return jsonify({"id": pid}), 201
+
+
+@app.route("/api/projects/<int:project_id>", methods=["GET"])
+def api_project_get(project_id):
+    db = get_db()
+    project = db.execute("SELECT * FROM projects WHERE id=?", (project_id,)).fetchone()
+    if not project:
+        db.close()
+        return jsonify({"error": "Ej hittat."}), 404
+    tasks = db.execute(
+        "SELECT id, text, done, created_at FROM tasks WHERE project_id=? ORDER BY created_at",
+        (project_id,),
+    ).fetchall()
+    db.close()
+    result = dict(project)
+    result["tasks"] = [dict(t) for t in tasks]
+    return jsonify(result)
+
+
+@app.route("/api/projects/<int:project_id>", methods=["PATCH"])
+def api_project_update(project_id):
+    data = request.get_json() or {}
+    db = get_db()
+    project = db.execute("SELECT * FROM projects WHERE id=?", (project_id,)).fetchone()
+    if not project:
+        db.close()
+        return jsonify({"error": "Ej hittat."}), 404
+
+    fields = {}
+    for key in ("name", "description", "status", "budget", "deadline", "notes"):
+        if key in data:
+            fields[key] = data[key]
+
+    if fields:
+        set_clause = ", ".join(f"{k}=?" for k in fields)
+        values = list(fields.values()) + [project_id]
+        db.execute(f"UPDATE projects SET {set_clause} WHERE id=?", values)
+        db.commit()
+
+    db.close()
+    return "", 204
+
+
+@app.route("/api/projects/<int:project_id>", methods=["DELETE"])
+def api_project_delete(project_id):
+    db = get_db()
+    db.execute("DELETE FROM projects WHERE id=?", (project_id,))
+    db.commit()
+    db.close()
+    return "", 204
+
+
+@app.route("/api/projects/<int:project_id>/tasks", methods=["POST"])
+def api_project_tasks_create(project_id):
+    data = request.get_json() or {}
+    text = data.get("text", "").strip()
+    if not text:
+        return jsonify({"error": "Text krävs."}), 400
+    db = get_db()
+    cur = db.execute(
+        "INSERT INTO tasks (project_id, text) VALUES (?,?)",
+        (project_id, text),
+    )
+    db.commit()
+    tid = cur.lastrowid
+    db.close()
+    return jsonify({"id": tid}), 201
+
+
+@app.route("/api/tasks/<int:task_id>", methods=["PATCH"])
+def api_task_update(task_id):
+    data = request.get_json() or {}
+    db = get_db()
+    if "done" in data:
+        db.execute("UPDATE tasks SET done=? WHERE id=?", (1 if data["done"] else 0, task_id))
+    if "text" in data:
+        db.execute("UPDATE tasks SET text=? WHERE id=?", (data["text"], task_id))
+    db.commit()
+    db.close()
+    return "", 204
+
+
+@app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+def api_task_delete(task_id):
+    db = get_db()
+    db.execute("DELETE FROM tasks WHERE id=?", (task_id,))
+    db.commit()
+    db.close()
+    return "", 204
 
 
 @app.route("/chat")

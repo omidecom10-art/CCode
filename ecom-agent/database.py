@@ -26,9 +26,10 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             description TEXT,
-            status TEXT DEFAULT 'aktiv',
+            status TEXT DEFAULT 'ide',
             budget REAL,
             deadline TEXT,
+            notes TEXT DEFAULT '',
             store_id INTEGER,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE SET NULL
@@ -63,4 +64,10 @@ def init_db():
         );
     """)
     conn.commit()
+
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(projects)").fetchall()]
+    if "notes" not in cols:
+        conn.execute("ALTER TABLE projects ADD COLUMN notes TEXT DEFAULT ''")
+        conn.commit()
+
     conn.close()
