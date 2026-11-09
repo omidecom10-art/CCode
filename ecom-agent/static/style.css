@@ -1685,3 +1685,228 @@ a:hover {
         min-width: 180px;
     }
 }
+
+
+/* ── Tools page ── */
+
+.tools-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.tools-tab {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.tools-tab:hover {
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+.tools-tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.tools-panel {
+    display: none;
+}
+
+.tools-panel.active {
+    display: block;
+}
+
+.tools-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.tools-input-side h3,
+.tools-input-side p {
+    margin-bottom: 8px;
+}
+
+.tools-result-side {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-content: start;
+}
+
+.result-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.result-card.result-accent {
+    border-color: var(--accent);
+    background: rgba(108, 92, 231, 0.08);
+}
+
+.result-card.result-big {
+    grid-column: span 2;
+}
+
+.result-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.result-big .result-value {
+    font-size: 28px;
+}
+
+.tools-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.tools-loading .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.tools-loading .dot:nth-child(2) { animation-delay: 0.2s; }
+.tools-loading .dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+}
+
+.tools-error {
+    margin-top: 16px;
+    padding: 12px;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid var(--danger);
+    border-radius: 8px;
+    color: var(--danger);
+    font-size: 14px;
+}
+
+/* SWOT grid */
+
+.swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.swot-box {
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--border);
+}
+
+.swot-box h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.swot-box ul {
+    list-style: disc;
+    padding-left: 18px;
+    margin: 0;
+}
+
+.swot-box li {
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.swot-s { background: rgba(39, 174, 96, 0.08); border-color: rgba(39, 174, 96, 0.3); }
+.swot-s h4 { color: #27ae60; }
+.swot-w { background: rgba(231, 76, 60, 0.08); border-color: rgba(231, 76, 60, 0.3); }
+.swot-w h4 { color: #e74c3c; }
+.swot-o { background: rgba(52, 152, 219, 0.08); border-color: rgba(52, 152, 219, 0.3); }
+.swot-o h4 { color: #3498db; }
+.swot-t { background: rgba(243, 156, 18, 0.08); border-color: rgba(243, 156, 18, 0.3); }
+.swot-t h4 { color: #f39c12; }
+
+/* Copy generator */
+
+.tools-output-side {
+    display: flex;
+    flex-direction: column;
+}
+
+.copy-output {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.copy-output strong {
+    color: var(--accent);
+}
+
+.copy-output ul, .copy-output ol {
+    padding-left: 18px;
+}
+
+.copy-output li {
+    margin-bottom: 4px;
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .tools-split {
+        grid-template-columns: 1fr;
+    }
+
+    .tools-result-side {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .swot-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-card.result-big {
+        grid-column: span 1;
+    }
+}

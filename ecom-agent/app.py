@@ -4,6 +4,8 @@ from dotenv import load_dotenv, set_key
 from database import init_db, get_db
 from shopify_client import build_dashboard_data, clear_cache, get_orders, get_products, get_order
 from ai_agent import EcomAgent
+from calculators import margin_calculator, pricing_suggestion
+import anthropic
 
 load_dotenv()
 
@@ -34,7 +36,8 @@ def check_api_key():
                "api_chat_clear",
                "projects_page", "project_detail", "api_projects_list",
                "api_projects_create", "api_project_update", "api_project_delete",
-               "api_project_tasks_create", "api_task_update", "api_task_delete"]
+               "api_project_tasks_create", "api_task_update", "api_task_delete",
+               "tools_page", "api_tools_swot", "api_tools_copy"]
     if request.endpoint not in allowed and not api_key_configured():
         flash("Du behöver ange din Anthropic API-nyckel först.", "error")
         return redirect(url_for("settings"))
@@ -380,6 +383,77 @@ def api_chat_conversations():
 def api_chat_clear(store_id):
     EcomAgent.clear_history(store_id if store_id == "null" else store_id)
     return "", 204
+
+
+@app.route("/tools")
+def tools_page():
+    return render_template("tools.html")
+
+
+@app.route("/api/tools/swot", methods=["POST"])
+def api_tools_swot():
+    data = request.get_json() or {}
+    description = data.get("description", "").strip()
+    if not description:
+        return jsonify({"error": "Beskrivning krävs."}), 400
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if not api_key:
+        return jsonify({"error": "Anthropic API-nyckel saknas."}), 400
+
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        resp = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1500,
+            system="Du är en e-handelsanalytiker. Svara ALLTID med exakt denna JSON-struktur, inget annat: {\"strengths\": [...], \"weaknesses\": [...], \"opportunities\": [...], \"threats\": [...]}. Varje array ska ha 3-5 korta punkter på svenska.",
+            messages=[{"role": "user", "content": f"Gör en SWOT-analys för: {description}"}],
+        )
+        import json
+        text = resp.content[0].text.strip()
+        result = json.loads(text)
+        return jsonify(result)
+    except json.JSONDecodeError:
+        return jsonify({"error": "Kunde inte tolka AI-svaret. Försök igen."}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/tools/copy", methods=["POST"])
+def api_tools_copy():
+    data = request.get_json() or {}
+    context = data.get("context", "").strip()
+    copy_type = data.get("type", "produktbeskrivning")
+    audience = data.get("audience", "")
+    tone = data.get("tone", "professionell")
+
+    if not context:
+        return jsonify({"error": "Kontext krävs."}), 400
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if not api_key:
+        return jsonify({"error": "Anthropic API-nyckel saknas."}), 400
+
+    prompt = f"""Skriv en {copy_type} på svenska.
+
+Produkt/Kontext: {context}
+Målgrupp: {audience or 'Ej specificerad'}
+Ton: {tone}
+
+Ge ett färdigt, publiceringsklart resultat. Använd markdown-formatering."""
+
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        resp = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1500,
+            system="Du är en expert på e-handelscopywriting på svenska. Skriv säljande, engagerande text.",
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text = resp.content[0].text
+        return jsonify({"text": text})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/settings")

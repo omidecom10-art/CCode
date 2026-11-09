@@ -32,7 +32,7 @@
             <a href="{{ url_for('projects_page') }}" class="{{ 'active' if active_page in ('projects_page', 'project_detail') else '' }}">
                 <span class="nav-icon">&#128203;</span> Projekt
             </a>
-            <a href="#" class="{{ 'active' if active_page == 'tools' else '' }}">
+            <a href="{{ url_for('tools_page') }}" class="{{ 'active' if active_page == 'tools_page' else '' }}">
                 <span class="nav-icon">&#128295;</span> Verktyg
             </a>
             <a href="{{ url_for('settings') }}" class="{{ 'active' if active_page == 'settings' else '' }}">

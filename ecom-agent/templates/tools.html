@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Verktyg - Ecom Agent{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>Verktyg</h2>
+</div>
+
+<div class="tools-tabs">
+    <button class="tools-tab active" data-tab="margin" onclick="switchTab('margin')">Marginalkalkylator</button>
+    <button class="tools-tab" data-tab="pricing" onclick="switchTab('pricing')">Priss&auml;ttningshj&auml;lp</button>
+    <button class="tools-tab" data-tab="swot" onclick="switchTab('swot')">SWOT-analys</button>
+    <button class="tools-tab" data-tab="copy" onclick="switchTab('copy')">Copy-generator</button>
+</div>
+
+<!-- Tab 1: Margin calculator -->
+<div class="tools-panel active" id="panel-margin">
+    <div class="card">
+        <div class="tools-split">
+            <div class="tools-input-side">
+                <h3>Ber&auml;kna marginal</h3>
+                <p class="muted" style="margin-bottom:16px;">Fyll i v&auml;rden f&ouml;r att ber&auml;kna marginaler i realtid.</p>
+                <div class="form-group">
+                    <label>Ink&ouml;pspris (kr)</label>
+                    <input type="number" id="mcCost" value="80" step="0.01" oninput="calcMargin()">
+                </div>
+                <div class="form-group">
+                    <label>Fraktkostnad (kr)</label>
+                    <input type="number" id="mcShipping" value="15" step="0.01" oninput="calcMargin()">
+                </div>
+                <div class="form-group">
+                    <label>Shopify-avgift (%)</label>
+                    <input type="number" id="mcFee" value="2" step="0.1" oninput="calcMargin()">
+                </div>
+                <div class="form-group">
+                    <label>Annonsbudget per enhet (kr)</label>
+                    <input type="number" id="mcAd" value="25" step="0.01" oninput="calcMargin()">
+                </div>
+                <div class="form-group">
+                    <label>F&ouml;rs&auml;ljningspris (kr)</label>
+                    <input type="number" id="mcPrice" value="249" step="0.01" oninput="calcMargin()">
+                </div>
+            </div>
+            <div class="tools-result-side" id="marginResult">
+                <div class="result-card result-accent">
+                    <span class="result-label">Bruttomarginal</span>
+                    <span class="result-value" id="resGrossMargin">—</span>
+                </div>
+                <div class="result-card result-accent">
+                    <span class="result-label">Nettomarginal</span>
+                    <span class="result-value" id="resNetMargin">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Bruttovinst/enhet</span>
+                    <span class="result-value" id="resGrossProfit">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Nettovinst/enhet</span>
+                    <span class="result-value" id="resNetProfit">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Shopify-avgift</span>
+                    <span class="result-value" id="resShopifyFee">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Total kostnad</span>
+                    <span class="result-value" id="resTotalCost">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Break-even (enheter)</span>
+                    <span class="result-value" id="resBreakEven">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">ROI</span>
+                    <span class="result-value" id="resROI">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 2: Pricing -->
+<div class="tools-panel" id="panel-pricing">
+    <div class="card">
+        <div class="tools-split">
+            <div class="tools-input-side">
+                <h3>Priss&auml;ttningshj&auml;lp</h3>
+                <p class="muted" style="margin-bottom:16px;">Ange kostnader och &ouml;nskad marginal f&ouml;r att f&aring; ett rekommenderat pris.</p>
+                <div class="form-group">
+                    <label>Ink&ouml;pspris (kr)</label>
+                    <input type="number" id="prCost" value="80" step="0.01" oninput="calcPricing()">
+                </div>
+                <div class="form-group">
+                    <label>Fraktkostnad (kr)</label>
+                    <input type="number" id="prShipping" value="15" step="0.01" oninput="calcPricing()">
+                </div>
+                <div class="form-group">
+                    <label>&Ouml;nskad marginal (%)</label>
+                    <input type="number" id="prMargin" value="50" step="1" min="1" max="99" oninput="calcPricing()">
+                </div>
+            </div>
+            <div class="tools-result-side" id="pricingResult">
+                <div class="result-card result-accent result-big">
+                    <span class="result-label">Rekommenderat pris</span>
+                    <span class="result-value" id="resSuggestedPrice">—</span>
+                </div>
+                <div class="result-card result-big">
+                    <span class="result-label">Vinst per enhet</span>
+                    <span class="result-value" id="resProfitUnit">—</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-label">Total kostnad</span>
+                    <span class="result-value" id="resPrTotalCost">—</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab 3: SWOT -->
+<div class="tools-panel" id="panel-swot">
+    <div class="card">
+        <h3>SWOT-analys</h3>
+        <p class="muted" style="margin-bottom:16px;">Beskriv en produktid&eacute; eller nisch s&aring; genererar AI en SWOT-analys.</p>
+        <div class="form-group">
+            <label>Beskriv din id&eacute;</label>
+            <textarea id="swotInput" rows="4" placeholder="T.ex. 'En webbutik som s&auml;ljer ekologiska hudv&aring;rdsprodukter riktat till m&auml;n 25-40 &aring;r'"></textarea>
+        </div>
+        <button class="btn btn-primary" id="swotBtn" onclick="runSwot()">Analysera</button>
+        <div id="swotLoading" class="tools-loading" style="display:none;">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span>Analyserar...</span>
+        </div>
+        <div id="swotResult" class="swot-grid" style="display:none;">
+            <div class="swot-box swot-s">
+                <h4>Styrkor</h4>
+                <div id="swotS"></div>
+            </div>
+            <div class="swot-box swot-w">
+                <h4>Svagheter</h4>
+                <div id="swotW"></div>
+            </div>
+            <div class="swot-box swot-o">
+                <h4>M&ouml;jligheter</h4>
+                <div id="swotO"></div>
+            </div>
+            <div class="swot-box swot-t">
+                <h4>Hot</h4>
+                <div id="swotT"></div>
+            </div>
+        </div>
+        <div id="swotError" class="tools-error" style="display:none;"></div>
+    </div>
+</div>
+
+<!-- Tab 4: Copy generator -->
+<div class="tools-panel" id="panel-copy">
+    <div class="card">
+        <h3>Copy-generator</h3>
+        <p class="muted" style="margin-bottom:16px;">Generera marknadsf&ouml;ringstexter med AI.</p>
+        <div class="tools-split">
+            <div class="tools-input-side">
+                <div class="form-group">
+                    <label>Typ av text</label>
+                    <select id="copyType">
+                        <option value="produktbeskrivning">Produktbeskrivning</option>
+                        <option value="e-post">E-post</option>
+                        <option value="annons">Annonstext</option>
+                        <option value="social media-inl&auml;gg">Social media-inl&auml;gg</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Produkt / Kontext</label>
+                    <textarea id="copyContext" rows="3" placeholder="Beskriv produkten eller sammanhanget..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>M&aring;lgrupp</label>
+                    <input type="text" id="copyAudience" placeholder="T.ex. 'Kvinnor 25-40, intresserade av fitness'">
+                </div>
+                <div class="form-group">
+                    <label>Ton</label>
+                    <select id="copyTone">
+                        <option value="professionell">Professionell</option>
+                        <option value="casual">Casual</option>
+                        <option value="br&aring;dskande">Br&aring;dskande</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="copyBtn" onclick="runCopy()">Generera</button>
+            </div>
+            <div class="tools-output-side">
+                <div id="copyLoading" class="tools-loading" style="display:none;">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    <span>Genererar...</span>
+                </div>
+                <div id="copyResult" style="display:none;">
+                    <div class="copy-output" id="copyOutput"></div>
+                    <button class="btn btn-sm btn-secondary" onclick="copyCopyText()" id="copyClipBtn" style="margin-top:12px;">&#128203; Kopiera</button>
+                </div>
+                <div id="copyError" class="tools-error" style="display:none;"></div>
+                <div id="copyPlaceholder" class="muted" style="padding:40px 0;text-align:center;">
+                    Resultatet visas h&auml;r.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='tools.js') }}"></script>
+<script>initTools();</script>
+{% endblock %}
