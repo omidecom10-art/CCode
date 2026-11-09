@@ -10,7 +10,7 @@ import anthropic
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24))
 
 ENV_PATH = os.path.join(os.path.dirname(__file__), ".env")
 
@@ -545,6 +545,7 @@ def toggle_dark_mode():
     return "", 204
 
 
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True, host="0.0.0.0", port=5000)
