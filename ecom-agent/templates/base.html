@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ecom Agent{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{{ 'light-mode' if session.get('light_mode') else '' }}">
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">EA</div>
+            <h1>Ecom Agent</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active_page == 'dashboard' else '' }}">
+                <span class="nav-icon">&#9632;</span> Dashboard
+            </a>
+            <a href="#" class="{{ 'active' if active_page == 'orders' else '' }}">
+                <span class="nav-icon">&#128230;</span> Ordrar
+            </a>
+            <a href="#" class="{{ 'active' if active_page == 'products' else '' }}">
+                <span class="nav-icon">&#128722;</span> Produkter
+            </a>
+            <a href="#" class="{{ 'active' if active_page == 'chat' else '' }}">
+                <span class="nav-icon">&#128172;</span> Chat
+            </a>
+            <a href="#" class="{{ 'active' if active_page == 'projects' else '' }}">
+                <span class="nav-icon">&#128203;</span> Projekt
+            </a>
+            <a href="#" class="{{ 'active' if active_page == 'tools' else '' }}">
+                <span class="nav-icon">&#128295;</span> Verktyg
+            </a>
+            <a href="{{ url_for('settings') }}" class="{{ 'active' if active_page == 'settings' else '' }}">
+                <span class="nav-icon">&#9881;</span> Inst&auml;llningar
+            </a>
+        </nav>
+    </aside>
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+            <select class="store-select" id="storeSelect" onchange="switchStore(this.value)">
+                {% if stores %}
+                    <option value="">V&auml;lj butik...</option>
+                    {% for store in stores %}
+                        <option value="{{ store.id }}" {{ 'selected' if session.get('active_store') == store.id else '' }}>
+                            {{ store.name }}
+                        </option>
+                    {% endfor %}
+                {% else %}
+                    <option value="">Inga butiker kopplade</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="topbar-right">
+            <span style="font-size: 13px; color: var(--text-muted);">Ecom Agent v1.0</span>
+        </div>
+    </header>
+
+    <main class="main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function switchStore(storeId) {
+            if (storeId) {
+                fetch('/set-store/' + storeId, { method: 'POST' })
+                    .then(() => window.location.reload());
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

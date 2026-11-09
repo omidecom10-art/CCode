@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Inst&auml;llningar - Ecom Agent{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 24px;">Inst&auml;llningar</h2>
+
+<!-- API-nyckel -->
+<div class="card">
+    <h2>Anthropic API-nyckel</h2>
+    <form method="POST" action="{{ url_for('save_api_key') }}">
+        <div class="form-group">
+            <label for="api_key">API-nyckel</label>
+            <input type="password" id="api_key" name="api_key"
+                   value="{{ api_key }}"
+                   placeholder="sk-ant-...">
+        </div>
+        <button type="submit" class="btn btn-primary">Spara nyckel</button>
+    </form>
+</div>
+
+<!-- Dark/Light mode -->
+<div class="card">
+    <h2>Utseende</h2>
+    <div class="toggle-wrapper">
+        <span>M&ouml;rkt l&auml;ge</span>
+        <label class="toggle">
+            <input type="checkbox" id="darkToggle"
+                   {{ '' if session.get('light_mode') else 'checked' }}
+                   onchange="toggleDarkMode(this.checked)">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
+</div>
+
+<!-- Ny butik -->
+<div class="card">
+    <h2>L&auml;gg till butik</h2>
+    <form method="POST" action="{{ url_for('add_store') }}">
+        <div class="form-group">
+            <label for="store_name">Butiksnamn</label>
+            <input type="text" id="store_name" name="name" required placeholder="Min butik">
+        </div>
+        <div class="form-group">
+            <label for="store_url">Shopify URL</label>
+            <input type="text" id="store_url" name="url" required placeholder="min-butik.myshopify.com">
+        </div>
+        <div class="form-group">
+            <label for="store_token">Admin API-token</label>
+            <input type="password" id="store_token" name="shopify_token" required placeholder="shpat_...">
+        </div>
+        <button type="submit" class="btn btn-primary">L&auml;gg till butik</button>
+    </form>
+</div>
+
+<!-- Lista butiker -->
+<div class="card">
+    <h2>Kopplade butiker</h2>
+    {% if stores %}
+        {% for store in stores %}
+            <div class="store-item">
+                <div class="store-item-info">
+                    <span class="name">{{ store.name }}</span>
+                    <span class="url">{{ store.url }}</span>
+                </div>
+                <div class="store-item-actions">
+                    <button class="btn btn-sm btn-secondary"
+                            onclick="openEditModal({{ store.id }}, '{{ store.name }}', '{{ store.url }}', '{{ store.shopify_token }}')">
+                        Redigera
+                    </button>
+                    <form method="POST" action="{{ url_for('delete_store', store_id=store.id) }}"
+                          style="display:inline"
+                          onsubmit="return confirm('Vill du verkligen ta bort denna butik?')">
+                        <button type="submit" class="btn btn-sm btn-danger">Ta bort</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color: var(--text-muted);">Inga butiker tillagda &auml;nnu.</p>
+    {% endif %}
+</div>
+
+<!-- Redigera-modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <h3>Redigera butik</h3>
+        <form method="POST" id="editForm">
+            <div class="form-group">
+                <label>Butiksnamn</label>
+                <input type="text" name="name" id="editName" required>
+            </div>
+            <div class="form-group">
+                <label>Shopify URL</label>
+                <input type="text" name="url" id="editUrl" required>
+            </div>
+            <div class="form-group">
+                <label>Admin API-token</label>
+                <input type="password" name="shopify_token" id="editToken" required>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Avbryt</button>
+                <button type="submit" class="btn btn-primary">Spara</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleDarkMode(isDark) {
+        fetch('/toggle-dark-mode', { method: 'POST' })
+            .then(() => window.location.reload());
+    }
+
+    function openEditModal(id, name, url, token) {
+        document.getElementById('editName').value = name;
+        document.getElementById('editUrl').value = url;
+        document.getElementById('editToken').value = token;
+        document.getElementById('editForm').action = '/edit-store/' + id;
+        document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+    }
+
+    document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+    });
+</script>
+{% endblock %}

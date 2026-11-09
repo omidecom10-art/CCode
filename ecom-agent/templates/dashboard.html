@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Ecom Agent{% endblock %}
+
+{% block content %}
+{% if not stores %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128640;</div>
+        <h2>V&auml;lkommen till Ecom Agent!</h2>
+        <p>
+            F&ouml;r att komma ig&aring;ng beh&ouml;ver du koppla din f&ouml;rsta Shopify-butik
+            och ange din Anthropic API-nyckel.
+        </p>
+        <a href="{{ url_for('settings') }}" class="btn btn-primary">
+            G&aring; till inst&auml;llningar
+        </a>
+    </div>
+{% else %}
+    <h2 style="margin-bottom: 24px;">Dashboard</h2>
+    <div class="card">
+        <p style="color: var(--text-muted);">
+            V&auml;lj en sektion i menyn till v&auml;nster f&ouml;r att b&ouml;rja arbeta.
+        </p>
+    </div>
+{% endif %}
+{% endblock %}
