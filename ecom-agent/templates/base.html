@@ -26,7 +26,7 @@
             <a href="{{ url_for('products') }}" class="{{ 'active' if active_page == 'products' else '' }}">
                 <span class="nav-icon">&#128722;</span> Produkter
             </a>
-            <a href="#" class="{{ 'active' if active_page == 'chat' else '' }}">
+            <a href="{{ url_for('chat') }}" class="{{ 'active' if active_page == 'chat' else '' }}">
                 <span class="nav-icon">&#128172;</span> Chat
             </a>
             <a href="#" class="{{ 'active' if active_page == 'projects' else '' }}">

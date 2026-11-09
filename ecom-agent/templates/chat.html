@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Chat - Ecom Agent{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <!-- Sidebar: history -->
+    <aside class="chat-sidebar" id="chatSidebar">
+        <div class="chat-sidebar-header">
+            <h3>Konversationer</h3>
+            <button class="btn btn-sm btn-primary" onclick="newConversation()">+ Ny</button>
+        </div>
+        <div class="chat-channel-select">
+            <select id="channelSelect" onchange="switchChannel(this.value)">
+                <option value="null">Generell</option>
+                {% for store in stores %}
+                    <option value="{{ store.id }}" {{ 'selected' if active_channel == store.id|string else '' }}>
+                        {{ store.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="chat-history-list" id="chatHistoryList"></div>
+    </aside>
+
+    <!-- Main chat area -->
+    <div class="chat-main">
+        <div class="chat-topbar">
+            <button class="chat-sidebar-toggle" onclick="toggleChatSidebar()">&#9776;</button>
+            <div class="chat-topbar-info">
+                <span class="chat-topbar-title" id="chatTitle">Generell</span>
+                <span class="chat-topbar-badge" id="chatMsgCount"></span>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-welcome" id="chatWelcome">
+                <div class="chat-welcome-icon">&#129302;</div>
+                <h2>Hej! Jag &auml;r din e-handelsassistent.</h2>
+                <p>St&auml;ll en fr&aring;ga om din butik, f&ouml;rs&auml;ljning, marknadsf&ouml;ring eller n&aring;got annat.</p>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <div class="chat-input-wrapper">
+                <textarea id="chatInput"
+                          placeholder="Skriv ditt meddelande..."
+                          rows="1"
+                          onkeydown="handleChatKey(event)"
+                          oninput="autoGrow(this)"></textarea>
+                <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">
+                    &#10148;
+                </button>
+            </div>
+            <span class="chat-input-hint">Enter = skicka, Shift+Enter = ny rad</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+<script>
+    initChat({{ active_channel | tojson }});
+</script>
+{% endblock %}

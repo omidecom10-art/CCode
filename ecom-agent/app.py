@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from dotenv import load_dotenv, set_key
 from database import init_db, get_db
 from shopify_client import build_dashboard_data, clear_cache, get_orders, get_products, get_order
+from ai_agent import EcomAgent
 
 load_dotenv()
 
@@ -28,7 +29,9 @@ def check_api_key():
     allowed = ["settings", "save_api_key", "add_store", "delete_store",
                "edit_store", "toggle_dark_mode", "set_store", "static",
                "api_dashboard", "api_refresh", "api_orders",
-               "api_order_detail", "api_products"]
+               "api_order_detail", "api_products",
+               "chat", "api_chat", "api_chat_history", "api_chat_conversations",
+               "api_chat_clear"]
     if request.endpoint not in allowed and not api_key_configured():
         flash("Du behöver ange din Anthropic API-nyckel först.", "error")
         return redirect(url_for("settings"))
@@ -174,6 +177,63 @@ def api_products(store_id):
         return jsonify(products_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/chat")
+def chat():
+    store_id = session.get("active_store")
+    channel = str(store_id) if store_id else "null"
+    return render_template("chat.html", active_channel=channel)
+
+
+@app.route("/api/chat", methods=["POST"])
+def api_chat():
+    data = request.get_json() or {}
+    message = data.get("message", "").strip()
+    store_id_raw = data.get("store_id")
+
+    if not message:
+        return jsonify({"error": "Meddelandet kan inte vara tomt."}), 400
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if not api_key:
+        return jsonify({"error": "Anthropic API-nyckel saknas. Gå till inställningar."}), 400
+
+    store_id = None
+    if store_id_raw is not None and store_id_raw != "null" and store_id_raw != "":
+        try:
+            store_id = int(store_id_raw)
+        except (ValueError, TypeError):
+            pass
+
+    try:
+        agent = EcomAgent(store_id, api_key)
+        reply = agent.chat(message)
+        return jsonify({"reply": reply})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/chat/history/<store_id>")
+def api_chat_history(store_id):
+    sid = None if store_id == "null" else int(store_id)
+    messages = EcomAgent.get_history(sid)
+    return jsonify(messages)
+
+
+@app.route("/api/chat/conversations")
+def api_chat_conversations():
+    convos = EcomAgent.get_conversations()
+    stores_map = {s["id"]: s["name"] for s in get_stores()}
+    for c in convos:
+        c["store_name"] = stores_map.get(c["store_id"], "Generell") if c["store_id"] else "Generell"
+    return jsonify(convos)
+
+
+@app.route("/api/chat/clear/<store_id>", methods=["POST"])
+def api_chat_clear(store_id):
+    EcomAgent.clear_history(store_id if store_id == "null" else store_id)
+    return "", 204
 
 
 @app.route("/settings")
