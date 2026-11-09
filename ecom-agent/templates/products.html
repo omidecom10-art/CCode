@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Produkter - Ecom Agent{% endblock %}
+
+{% block content %}
+{% if not stores %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128722;</div>
+        <h2>Inga butiker kopplade</h2>
+        <p>Koppla en butik i inst&auml;llningarna f&ouml;r att se produkter.</p>
+        <a href="{{ url_for('settings') }}" class="btn btn-primary">G&aring; till inst&auml;llningar</a>
+    </div>
+{% elif not active_store_id %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128073;</div>
+        <h2>V&auml;lj en butik</h2>
+        <p>Anv&auml;nd dropdown-menyn i topbaren f&ouml;r att v&auml;lja butik.</p>
+    </div>
+{% else %}
+    <div class="dashboard-header">
+        <h2>Produkter</h2>
+    </div>
+
+    <!-- Filter -->
+    <div class="card filter-bar">
+        <div class="filter-row">
+            <div class="filter-group filter-search">
+                <label>S&ouml;k produkt</label>
+                <input type="text" id="productSearch" placeholder="Produktnamn..." oninput="applyProductFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Sortera</label>
+                <select id="productSort" onchange="applyProductFilters()">
+                    <option value="name_asc">Namn A-&Ouml;</option>
+                    <option value="name_desc">Namn &Ouml;-A</option>
+                    <option value="price_asc">Pris l&aring;gt-h&ouml;gt</option>
+                    <option value="price_desc">Pris h&ouml;gt-l&aring;gt</option>
+                    <option value="stock_asc">Lager l&aring;gt-h&ouml;gt</option>
+                    <option value="stock_desc">Lager h&ouml;gt-l&aring;gt</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="productsLoading" class="card" style="text-align:center; padding:48px;">
+        <p class="muted">H&auml;mtar produkter...</p>
+    </div>
+
+    <div id="productsError" class="card" style="display:none; text-align:center; padding:48px;">
+        <p style="color: var(--danger);" id="productsErrorMsg"></p>
+    </div>
+
+    <div id="productsContent" style="display:none;">
+        <div class="product-grid" id="productGrid"></div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if active_store_id %}
+<script src="{{ url_for('static', filename='products.js') }}"></script>
+<script>initProducts({{ active_store_id }});</script>
+{% endif %}
+{% endblock %}

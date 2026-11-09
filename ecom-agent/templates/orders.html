@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Ordrar - Ecom Agent{% endblock %}
+
+{% block content %}
+{% if not stores %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128230;</div>
+        <h2>Inga butiker kopplade</h2>
+        <p>Koppla en butik i inst&auml;llningarna f&ouml;r att se ordrar.</p>
+        <a href="{{ url_for('settings') }}" class="btn btn-primary">G&aring; till inst&auml;llningar</a>
+    </div>
+{% elif not active_store_id %}
+    <div class="card onboarding">
+        <div class="onboarding-icon">&#128073;</div>
+        <h2>V&auml;lj en butik</h2>
+        <p>Anv&auml;nd dropdown-menyn i topbaren f&ouml;r att v&auml;lja butik.</p>
+    </div>
+{% else %}
+    <div class="dashboard-header">
+        <h2>Ordrar</h2>
+    </div>
+
+    <!-- Filter -->
+    <div class="card filter-bar">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Status</label>
+                <select id="filterStatus" onchange="applyFilters()">
+                    <option value="all">Alla</option>
+                    <option value="unfulfilled">Ej uppfyllda</option>
+                    <option value="fulfilled">Uppfyllda</option>
+                    <option value="refunded">&Aring;terbetalda</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Fr&aring;n</label>
+                <input type="date" id="filterFrom" onchange="applyFilters()">
+            </div>
+            <div class="filter-group">
+                <label>Till</label>
+                <input type="date" id="filterTo" onchange="applyFilters()">
+            </div>
+            <div class="filter-group filter-search">
+                <label>S&ouml;k</label>
+                <input type="text" id="filterSearch" placeholder="Kundnamn eller ordernummer..." oninput="applyFilters()">
+            </div>
+        </div>
+    </div>
+
+    <div id="ordersLoading" class="card" style="text-align:center; padding:48px;">
+        <p class="muted">H&auml;mtar ordrar...</p>
+    </div>
+
+    <div id="ordersError" class="card" style="display:none; text-align:center; padding:48px;">
+        <p style="color: var(--danger);" id="ordersErrorMsg"></p>
+    </div>
+
+    <div id="ordersContent" style="display:none;">
+        <div class="card">
+            <div class="table-wrapper">
+                <table class="data-table orders-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Order</th>
+                            <th>Datum</th>
+                            <th>Kund</th>
+                            <th>Produkter</th>
+                            <th>Summa</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if active_store_id %}
+<script src="{{ url_for('static', filename='orders.js') }}"></script>
+<script>initOrders({{ active_store_id }});</script>
+{% endif %}
+{% endblock %}

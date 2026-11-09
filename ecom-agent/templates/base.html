@@ -20,10 +20,10 @@
             <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active_page == 'dashboard' else '' }}">
                 <span class="nav-icon">&#9632;</span> Dashboard
             </a>
-            <a href="#" class="{{ 'active' if active_page == 'orders' else '' }}">
+            <a href="{{ url_for('orders') }}" class="{{ 'active' if active_page == 'orders' else '' }}">
                 <span class="nav-icon">&#128230;</span> Ordrar
             </a>
-            <a href="#" class="{{ 'active' if active_page == 'products' else '' }}">
+            <a href="{{ url_for('products') }}" class="{{ 'active' if active_page == 'products' else '' }}">
                 <span class="nav-icon">&#128722;</span> Produkter
             </a>
             <a href="#" class="{{ 'active' if active_page == 'chat' else '' }}">
