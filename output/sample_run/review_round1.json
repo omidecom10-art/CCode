@@ -1,0 +1,31 @@
+{
+  "round": 1,
+  "verdicts": {
+    "A1": {
+      "approved": true,
+      "issues": [],
+      "notes": [
+        "The testimonial is a verbatim excerpt of R07 but drops the final sentence 'Worth it.' This is acceptable because the meaning is unchanged."
+      ]
+    },
+    "A2": {
+      "approved": true,
+      "issues": [],
+      "notes": []
+    },
+    "A3": {
+      "approved": true,
+      "issues": [],
+      "notes": []
+    },
+    "V1": {
+      "approved": true,
+      "issues": [],
+      "notes": [
+        "The broll_ice image is a glass of water with a straw, ice and lemon, not the bottle. It loosely fits the ice lines but does not show the product being described.",
+        "broll_road is an 'Evening car trip' image. It does not convey a hot afternoon, though it is still car-related and not misleading."
+      ]
+    }
+  },
+  "reviewer_summary": "All four assets pass. Every claim matches its cited evidence. Testimonials are verbatim (or verbatim excerpts) from 5-star reviews. The offer and CTA match the brand. No forbidden phrases, competitors, or health claims appear, and the deterministic checks were clean. Only minor b-roll fit notes on V1."
+}

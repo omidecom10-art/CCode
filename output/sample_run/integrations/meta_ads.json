@@ -1,0 +1,98 @@
+[
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "image": "A1_feed.png",
+      "adcreative": {
+        "name": "studio A1 The real-day cold test",
+        "object_story_spec": {
+          "page_id": "<PAGE_ID>",
+          "link_data": {
+            "message": "Cold for up to 24 hours in our 2026 lab test. Real days back it up.\n\n15% off your first order with code TRAIL15",
+            "name": "Filled with ice at 7am. Still rattling.",
+            "link": "https://example.com/products/trail-flask-24",
+            "image_hash": "<from adimages upload>",
+            "call_to_action": {
+              "type": "SHOP_NOW",
+              "value": {
+                "link": "https://example.com/products/trail-flask-24"
+              }
+            }
+          }
+        }
+      },
+      "ad": {
+        "name": "studio A1",
+        "adset_id": "<ADSET_ID>",
+        "creative": {
+          "creative_id": "<from adcreatives>"
+        },
+        "status": "PAUSED"
+      }
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "image": "A2_feed.png",
+      "adcreative": {
+        "name": "studio A2 One bottle, whole week",
+        "object_story_spec": {
+          "page_id": "<PAGE_ID>",
+          "link_data": {
+            "message": "Fits most car cup holders. The lid goes in the dishwasher. Clips to your pack.\n\n15% off your first order with code TRAIL15",
+            "name": "Desk. Gym. Trail. Same bottle.",
+            "link": "https://example.com/products/trail-flask-24",
+            "image_hash": "<from adimages upload>",
+            "call_to_action": {
+              "type": "SHOP_NOW",
+              "value": {
+                "link": "https://example.com/products/trail-flask-24"
+              }
+            }
+          }
+        }
+      },
+      "ad": {
+        "name": "studio A2",
+        "adset_id": "<ADSET_ID>",
+        "creative": {
+          "creative_id": "<from adcreatives>"
+        },
+        "status": "PAUSED"
+      }
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "image": "A3_feed.png",
+      "adcreative": {
+        "name": "studio A3 Hot coffee, too",
+        "object_story_spec": {
+          "page_id": "<PAGE_ID>",
+          "link_data": {
+            "message": "Hot for up to 12 hours in our 2026 lab test. Tea still warm after a freezing night.\n\n15% off your first order with code TRAIL15",
+            "name": "It does hot coffee, too.",
+            "link": "https://example.com/products/trail-flask-24",
+            "image_hash": "<from adimages upload>",
+            "call_to_action": {
+              "type": "SHOP_NOW",
+              "value": {
+                "link": "https://example.com/products/trail-flask-24"
+              }
+            }
+          }
+        }
+      },
+      "ad": {
+        "name": "studio A3",
+        "adset_id": "<ADSET_ID>",
+        "creative": {
+          "creative_id": "<from adcreatives>"
+        },
+        "status": "PAUSED"
+      }
+    }
+  }
+]

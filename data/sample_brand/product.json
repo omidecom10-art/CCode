@@ -1,0 +1,20 @@
+{
+  "_note": "Same shape studio/integrations/shopify.py returns for a live Shopify product.",
+  "id": "gid://shopify/Product/0000000001",
+  "handle": "trail-flask-24",
+  "title": "Ridgeline Trail Flask, 24 oz",
+  "price": "34.00",
+  "currency": "USD",
+  "image": "assets/product.jpg",
+  "description": "A 24 oz double-wall vacuum insulated bottle in 18/8 stainless steel. Keeps drinks cold for up to 24 hours and hot for up to 12 hours in our lab tests. Leak-resistant screw lid with a carry loop. Narrow base fits most car cup holders. Dishwasher-safe, BPA-free lid. Powder-coated finish in four colours. 2-year warranty.",
+  "specs": {
+    "capacity": "24 oz (710 ml)",
+    "weight": "13.4 oz (380 g)",
+    "cold_retention": "up to 24 hours (Ridgeline lab test, 2026)",
+    "hot_retention": "up to 12 hours (Ridgeline lab test, 2026)",
+    "material": "18/8 stainless steel, BPA-free lid",
+    "base_diameter": "2.9 in (74 mm)",
+    "warranty": "2 years",
+    "colours": ["Forest", "Sand", "Ember", "Slate"]
+  }
+}

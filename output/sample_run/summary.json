@@ -1,0 +1,104 @@
+{
+  "run_id": "20261023-220502",
+  "mode": "live",
+  "brand": "Ridgeline Supply Co.",
+  "product": "Ridgeline Trail Flask, 24 oz",
+  "models": {
+    "research": "claude-opus-5-5",
+    "writer": "claude-opus-5-5",
+    "reviewer": "claude-opus-5-5"
+  },
+  "research_tool_calls": 5,
+  "rounds": 1,
+  "approved": 4,
+  "blocked": 0,
+  "assets": [
+    {
+      "id": "A1",
+      "kind": "static",
+      "angle": "The real-day cold test",
+      "headline": "Filled with ice at 7am. Still rattling.",
+      "status": "approved",
+      "files": [
+        "ads/A1_feed.png",
+        "ads/A1_story.png"
+      ]
+    },
+    {
+      "id": "A2",
+      "kind": "static",
+      "angle": "One bottle, whole week",
+      "headline": "Desk. Gym. Trail. Same bottle.",
+      "status": "approved",
+      "files": [
+        "ads/A2_feed.png",
+        "ads/A2_story.png"
+      ]
+    },
+    {
+      "id": "A3",
+      "kind": "static",
+      "angle": "Hot coffee, too",
+      "headline": "It does hot coffee, too.",
+      "status": "approved",
+      "files": [
+        "ads/A3_feed.png",
+        "ads/A3_story.png"
+      ]
+    },
+    {
+      "id": "V1",
+      "kind": "video",
+      "angle": "The real-day cold test",
+      "headline": "Ice at 7am. Still there.",
+      "status": "approved",
+      "files": [
+        "video/V1_9x16.mp4",
+        "video/V1_poster.jpg"
+      ],
+      "qa": []
+    }
+  ],
+  "seconds": 125.9,
+  "steps": [
+    {
+      "step": "load brand + product",
+      "status": "ok",
+      "seconds": 0.0
+    },
+    {
+      "step": "research agent",
+      "status": "ok",
+      "seconds": 40.34
+    },
+    {
+      "step": "copywriter round 1",
+      "status": "ok",
+      "seconds": 32.43
+    },
+    {
+      "step": "checks + reviewer round 1",
+      "status": "ok",
+      "seconds": 11.13
+    },
+    {
+      "step": "static ad engine",
+      "status": "ok",
+      "seconds": 2.59
+    },
+    {
+      "step": "video editor",
+      "status": "ok",
+      "seconds": 39.18
+    },
+    {
+      "step": "publish",
+      "status": "ok",
+      "seconds": 0.01
+    }
+  ],
+  "llm_calls": 4,
+  "input_tokens": 20868,
+  "output_tokens": 8099,
+  "usd": 0.2454
+}

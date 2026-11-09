@@ -1,0 +1,8 @@
+[
+  {
+    "note": "SHOPIFY_STORE_DOMAIN not set: using the product.json in the brand folder",
+    "payload": {
+      "would_fetch": "https://<store>.myshopify.com/products/trail-flask-24.json"
+    }
+  }
+]

@@ -1,0 +1,170 @@
+[
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "parent": {
+        "database_id": "<DATABASE_ID>"
+      },
+      "properties": {
+        "Name": {
+          "title": [
+            {
+              "text": {
+                "content": "A1: Filled with ice at 7am. Still rattling."
+              }
+            }
+          ]
+        },
+        "Status": {
+          "select": {
+            "name": "approved"
+          }
+        },
+        "Angle": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "The real-day cold test"
+              }
+            }
+          ]
+        },
+        "Run": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "20261023-220502"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "parent": {
+        "database_id": "<DATABASE_ID>"
+      },
+      "properties": {
+        "Name": {
+          "title": [
+            {
+              "text": {
+                "content": "A2: Desk. Gym. Trail. Same bottle."
+              }
+            }
+          ]
+        },
+        "Status": {
+          "select": {
+            "name": "approved"
+          }
+        },
+        "Angle": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "One bottle, whole week"
+              }
+            }
+          ]
+        },
+        "Run": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "20261023-220502"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "parent": {
+        "database_id": "<DATABASE_ID>"
+      },
+      "properties": {
+        "Name": {
+          "title": [
+            {
+              "text": {
+                "content": "A3: It does hot coffee, too."
+              }
+            }
+          ]
+        },
+        "Status": {
+          "select": {
+            "name": "approved"
+          }
+        },
+        "Angle": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "Hot coffee, too"
+              }
+            }
+          ]
+        },
+        "Run": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "20261023-220502"
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "parent": {
+        "database_id": "<DATABASE_ID>"
+      },
+      "properties": {
+        "Name": {
+          "title": [
+            {
+              "text": {
+                "content": "V1: Ice at 7am. Still there."
+              }
+            }
+          ]
+        },
+        "Status": {
+          "select": {
+            "name": "approved"
+          }
+        },
+        "Angle": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "The real-day cold test"
+              }
+            }
+          ]
+        },
+        "Run": {
+          "rich_text": [
+            {
+              "text": {
+                "content": "20261023-220502"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+]

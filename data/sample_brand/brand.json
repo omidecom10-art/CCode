@@ -1,0 +1,28 @@
+{
+  "_note": "Fictional brand used for the sample run. Replace this folder with a real brand's data, or pull the product live with studio/integrations/shopify.py.",
+  "name": "Ridgeline Supply Co.",
+  "wordmark": "RIDGELINE",
+  "voice": "Plain-spoken, outdoorsy, a little dry. Short sentences. Talks like a friend who hikes, not like an ad. No hype words.",
+  "audience": "Active adults 25-45 who carry one bottle from the commute to the gym to the trail.",
+  "colors": {"primary": "#23463A", "background": "#F3EDE2", "accent": "#E8833A", "text": "#1B1B1B", "light_text": "#FFFFFF"},
+  "offer": "15% off your first order with code TRAIL15",
+  "cta": "Shop now",
+  "approved_claims": [
+    "Keeps drinks cold for up to 24 hours (Ridgeline lab test, 2026)",
+    "Keeps drinks hot for up to 12 hours (Ridgeline lab test, 2026)",
+    "Double-wall vacuum insulated 18/8 stainless steel",
+    "Fits most car cup holders",
+    "Dishwasher-safe lid",
+    "BPA-free lid",
+    "2-year warranty"
+  ],
+  "do_not_say": [
+    {"phrase": "leak-proof", "reason": "The lid is leak-resistant, not leak-proof. Some reviews report minor leaks."},
+    {"phrase": "lifetime warranty", "reason": "The warranty is 2 years."},
+    {"phrase": "best", "reason": "No unsupported superlatives."},
+    {"phrase": "weight loss", "reason": "No health or body claims."},
+    {"phrase": "lose weight", "reason": "No health or body claims."},
+    {"phrase": "unbreakable", "reason": "Reviews report dents and chipped paint after drops."}
+  ],
+  "competitors": ["SummitSip", "AquaCore", "PeakVessel"]
+}

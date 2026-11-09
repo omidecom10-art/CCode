@@ -1,0 +1,155 @@
+{
+  "static_ads": [
+    {
+      "id": "A1",
+      "angle": "The real-day cold test",
+      "headline": "Filled with ice at 7am. Still rattling.",
+      "subhead": "Cold for up to 24 hours in our 2026 lab test. Real days back it up.",
+      "offer_line": "15% off your first order with code TRAIL15",
+      "cta": "Shop now",
+      "claims": [
+        {
+          "text": "A customer filled it with ice at 7am and still had ice after a 10 hour shift.",
+          "evidence_ids": [
+            "R01"
+          ]
+        },
+        {
+          "text": "Keeps drinks cold for up to 24 hours (Ridgeline lab test, 2026).",
+          "evidence_ids": [
+            "B-claim-1",
+            "P-cold_retention"
+          ]
+        },
+        {
+          "text": "Customers report it staying cold on a 95 degree hike and in a hot car.",
+          "evidence_ids": [
+            "R07",
+            "R14"
+          ]
+        }
+      ],
+      "testimonial": {
+        "text": "Ice water on a 95 degree hike and it stayed cold the whole day.",
+        "review_id": "R07"
+      }
+    },
+    {
+      "id": "A2",
+      "angle": "One bottle, whole week",
+      "headline": "Desk. Gym. Trail. Same bottle.",
+      "subhead": "Fits most car cup holders. The lid goes in the dishwasher. Clips to your pack.",
+      "offer_line": "15% off your first order with code TRAIL15",
+      "cta": "Shop now",
+      "claims": [
+        {
+          "text": "Customers use the same bottle at the desk, the gym and on the trail.",
+          "evidence_ids": [
+            "R03",
+            "R16"
+          ]
+        },
+        {
+          "text": "Fits most car cup holders.",
+          "evidence_ids": [
+            "B-claim-4",
+            "P-base_diameter"
+          ]
+        },
+        {
+          "text": "Dishwasher-safe lid.",
+          "evidence_ids": [
+            "B-claim-5"
+          ]
+        },
+        {
+          "text": "Carry loop clips to a pack.",
+          "evidence_ids": [
+            "P-desc",
+            "R10"
+          ]
+        }
+      ],
+      "testimonial": {
+        "text": "One bottle for the commute, the gym, and the weekend. I stopped forgetting water at home.",
+        "review_id": "R16"
+      }
+    },
+    {
+      "id": "A3",
+      "angle": "Hot coffee, too",
+      "headline": "It does hot coffee, too.",
+      "subhead": "Hot for up to 12 hours in our 2026 lab test. Tea still warm after a freezing night.",
+      "offer_line": "15% off your first order with code TRAIL15",
+      "cta": "Shop now",
+      "claims": [
+        {
+          "text": "Keeps drinks hot for up to 12 hours (Ridgeline lab test, 2026).",
+          "evidence_ids": [
+            "B-claim-2",
+            "P-hot_retention"
+          ]
+        },
+        {
+          "text": "A camper's tea was still warm in the morning after a night below freezing.",
+          "evidence_ids": [
+            "R18"
+          ]
+        }
+      ],
+      "testimonial": {
+        "text": "Coffee was still hot at lunch. I did not expect that from a water bottle.",
+        "review_id": "R05"
+      }
+    }
+  ],
+  "video": {
+    "id": "V1",
+    "angle": "The real-day cold test",
+    "beats": [
+      {
+        "line": "Filled it with ice at 7am. Still rattling after the shift.",
+        "caption": "Ice at 7am. Still there.",
+        "broll_id": "broll_ice",
+        "evidence_ids": [
+          "R01"
+        ]
+      },
+      {
+        "line": "Ninety-five degree hike. Ice water stayed cold the whole day.",
+        "caption": "Cold all day on a 95° hike",
+        "broll_id": "broll_trail",
+        "evidence_ids": [
+          "R07"
+        ]
+      },
+      {
+        "line": "Left in a hot car all afternoon. Water still cold.",
+        "caption": "Hot car. Still cold water.",
+        "broll_id": "broll_road",
+        "evidence_ids": [
+          "R14"
+        ]
+      },
+      {
+        "line": "Same bottle at the gym. And the lid goes in the dishwasher.",
+        "caption": "Gym too. Lid: dishwasher.",
+        "broll_id": "broll_gym",
+        "evidence_ids": [
+          "R03",
+          "B-claim-5"
+        ]
+      },
+      {
+        "line": "Cold for up to 24 hours in our 2026 lab test.",
+        "caption": "Cold up to 24 hrs (lab test)",
+        "broll_id": "broll_ice",
+        "evidence_ids": [
+          "B-claim-1",
+          "P-cold_retention"
+        ]
+      }
+    ],
+    "end_card": "One bottle. Cold all day."
+  }
+}

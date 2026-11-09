@@ -1,0 +1,8 @@
+[
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "text": "*ecom-ai-studio run* for Ridgeline Supply Co.: 4 approved, 0 blocked\nResearch: 5 tool calls · Review rounds: 1 · Cost: $0.2454\n• A1 approved: Filled with ice at 7am. Still rattling.\n• A2 approved: Desk. Gym. Trail. Same bottle.\n• A3 approved: It does hot coffee, too.\n• V1 approved: Ice at 7am. Still there."
+    }
+  }
+]

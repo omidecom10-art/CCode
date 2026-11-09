@@ -1,0 +1,630 @@
+{
+  "research": {
+    "model": "claude-opus-5-5",
+    "output": {
+      "product_summary": "Ridgeline Trail Flask, 24 oz (710 ml), $34.00. Double-wall vacuum insulated 18/8 stainless steel bottle. In Ridgeline's 2026 lab test it kept drinks cold for up to 24 hours and hot for up to 12 hours. It has a leak-resistant screw lid with a carry loop. The narrow 2.9 in (74 mm) base fits most car cup holders. The lid is dishwasher-safe and BPA-free. Powder-coated finish in Forest, Sand, Ember and Slate. Weighs 13.4 oz (380 g). 2-year warranty. Reviews: 18, average 4.11 (ten 5-star, four 4-star, one 3-star, two 2-star, one 1-star). Offer: 15% off your first order with code TRAIL15. CTA: Shop now.",
+      "audience": "Active adults aged 25-45 who carry one bottle all day: commute, desk, gym, trail. Reviews add detail: shift workers (R01), drivers who want it to fit the cup holder (R02, R14), weekend hikers and campers (R07, R18), and bike commuters (R17). They care about cold that lasts all day, one bottle for everything, and easy cleaning. Voice should be plain-spoken, outdoorsy and a little dry, like a friend who hikes. No hype.",
+      "customer_language": [
+        {
+          "text": "There was still ice rattling around when I got home.",
+          "review_id": "R01"
+        },
+        {
+          "text": "Finally a bottle that fits the cup holder in my car. My old one rolled around the floor every morning.",
+          "review_id": "R02"
+        },
+        {
+          "text": "Goes from my desk to the gym to the trail on weekends. Same bottle all week.",
+          "review_id": "R03"
+        },
+        {
+          "text": "Coffee was still hot at lunch. I did not expect that from a water bottle.",
+          "review_id": "R05"
+        },
+        {
+          "text": "Ice water on a 95 degree hike and it stayed cold the whole day. Worth it.",
+          "review_id": "R07"
+        },
+        {
+          "text": "I clip it to my pack and forget about it.",
+          "review_id": "R10"
+        },
+        {
+          "text": "Lid goes in the dishwasher, which is the only reason I still use a bottle every day.",
+          "review_id": "R12"
+        },
+        {
+          "text": "Left it in a hot car all afternoon and the water was still cold. That's the test that matters for me.",
+          "review_id": "R14"
+        },
+        {
+          "text": "One bottle for the commute, the gym, and the weekend. I stopped forgetting water at home.",
+          "review_id": "R16"
+        },
+        {
+          "text": "Camping trip, below freezing at night, tea was still warm in the morning.",
+          "review_id": "R18"
+        },
+        {
+          "text": "Sand colour looks even better in person. Gets compliments at the office.",
+          "review_id": "R13"
+        }
+      ],
+      "benefits": [
+        {
+          "point": "Drinks stay cold all day, even in heat: ice still there after a 10-hour shift, cold through a 95-degree hike and an afternoon in a hot car. This backs the approved 24-hour cold claim from the lab test.",
+          "evidence_ids": [
+            "R01",
+            "R07",
+            "R14",
+            "P-cold_retention",
+            "B-claim-1"
+          ]
+        },
+        {
+          "point": "Hot drinks stay warm: coffee still hot at lunch, tea still warm the morning after a night below freezing. This backs the approved 12-hour hot claim.",
+          "evidence_ids": [
+            "R05",
+            "R18",
+            "P-hot_retention",
+            "B-claim-2"
+          ]
+        },
+        {
+          "point": "One bottle for the whole week: commute, desk, gym and trail.",
+          "evidence_ids": [
+            "R03",
+            "R16",
+            "R17"
+          ]
+        },
+        {
+          "point": "Fits most car cup holders thanks to the narrow 2.9 in base. Reviewers also say it fits under an office water dispenser and in a bike cage.",
+          "evidence_ids": [
+            "R02",
+            "R17",
+            "P-base_diameter",
+            "B-claim-4"
+          ]
+        },
+        {
+          "point": "Dishwasher-safe lid makes daily use easy. It is also BPA-free.",
+          "evidence_ids": [
+            "R12",
+            "B-claim-5",
+            "B-claim-6",
+            "P-material"
+          ]
+        },
+        {
+          "point": "The carry loop makes it easy to clip to a pack.",
+          "evidence_ids": [
+            "R10",
+            "P-desc"
+          ]
+        },
+        {
+          "point": "Reusable, so customers stop buying bottled water.",
+          "evidence_ids": [
+            "R08"
+          ]
+        },
+        {
+          "point": "The colours get noticed. Sand gets compliments at the office.",
+          "evidence_ids": [
+            "R13",
+            "P-colours"
+          ]
+        },
+        {
+          "point": "The 2-year warranty is honoured: one customer got a replacement after a dent.",
+          "evidence_ids": [
+            "R15",
+            "P-warranty",
+            "B-claim-7"
+          ]
+        }
+      ],
+      "objections": [
+        {
+          "point": "Can leak a little when lying on its side in a bag. The lid is leak-resistant, not leak-proof.",
+          "evidence_ids": [
+            "R04",
+            "P-desc"
+          ]
+        },
+        {
+          "point": "Lid is stiff at first and hard to open with gloves on.",
+          "evidence_ids": [
+            "R03",
+            "R11"
+          ]
+        },
+        {
+          "point": "Dents and chipped paint after drops (both from unverified reviews). Still works, but looks worn.",
+          "evidence_ids": [
+            "R06",
+            "R15"
+          ]
+        },
+        {
+          "point": "Heavier than a plastic bottle (13.4 oz empty).",
+          "evidence_ids": [
+            "R08",
+            "P-weight"
+          ]
+        },
+        {
+          "point": "Some customers want a bigger size (32 oz).",
+          "evidence_ids": [
+            "R17",
+            "P-capacity"
+          ]
+        },
+        {
+          "point": "Price of $34 is above plastic bottles, though below PeakVessel's $49 ad price.",
+          "evidence_ids": [
+            "P-price",
+            "C05"
+          ]
+        }
+      ],
+      "competitor_angles": [
+        {
+          "competitor": "SummitSip",
+          "angle": "Pitches it as the last bottle you'll ever buy: lifetime warranty, 'leak-proof guaranteed', '100% unbreakable'. This ad has run longest of theirs (64 days).",
+          "risk_or_gap": "We cannot match any of these. Our warranty is 2 years, the lid is leak-resistant, and reviews mention dents and leaks. The brand guide bans 'leak-proof', 'lifetime warranty' and 'unbreakable'. The gap: honest, specific proof with a warranty that real customers say gets honoured.",
+          "evidence_ids": [
+            "C01",
+            "B-claim-7",
+            "R04",
+            "R06",
+            "R15"
+          ]
+        },
+        {
+          "competitor": "SummitSip",
+          "angle": "Big numbers: 'Cold for 36 hours', '2 million hydrated humans'.",
+          "risk_or_gap": "Our tested claim is 24 hours. Never match or reference 36 hours, and don't invent customer counts. Real-life proof (shift, hike, hot car) can beat a bigger lab number.",
+          "evidence_ids": [
+            "C02",
+            "B-claim-1",
+            "R01",
+            "R07",
+            "R14"
+          ]
+        },
+        {
+          "competitor": "AquaCore",
+          "angle": "Health and wellness: 'Drink more, feel better', 'boosts your energy'. Ran 88 days.",
+          "risk_or_gap": "Health and body claims are off-limits for us. Stick to practical benefits like temperature, fit and easy cleaning.",
+          "evidence_ids": [
+            "C03"
+          ]
+        },
+        {
+          "competitor": "AquaCore",
+          "angle": "Influencer unboxing on TikTok: 12 colours, matching straw lids, limited drop.",
+          "risk_or_gap": "We have 4 colours and no straw lid, so we can't win on variety. We can show real-life use and the Sand compliment instead.",
+          "evidence_ids": [
+            "C04",
+            "P-colours",
+            "R13"
+          ]
+        },
+        {
+          "competitor": "PeakVessel",
+          "angle": "Extreme expedition credibility: 'Tested on Everest base camp', $49.",
+          "risk_or_gap": "This leaves everyday use uncovered: commute, desk, gym and weekend trail. We are $15 cheaper ($34). Don't copy the Everest claim.",
+          "evidence_ids": [
+            "C05",
+            "P-price",
+            "R16"
+          ]
+        }
+      ],
+      "gaps": [
+        "No competitor shows everyday proof (ice after a 10-hour shift, water still cold after a hot car). They lean on big lab numbers or extreme expeditions. (R01, R14, C02, C05)",
+        "No competitor talks about fitting a car cup holder, and reviewers clearly care about it. (R02, B-claim-4)",
+        "No competitor mentions a dishwasher-safe lid, even though one reviewer says it's the only reason they still use a bottle every day. (R12, B-claim-5)",
+        "No competitor talks about hot drinks. Only our customers mention coffee at lunch or tea after a freezing night. (R05, R18, B-claim-2)",
+        "Competitors overclaim (lifetime, unbreakable, leak-proof, energy). A plain, honest voice and a warranty customers say is honoured stand apart. (C01, C03, R15)",
+        "Everyday 'one bottle all week' story against PeakVessel's summit-only positioning, at a lower price. (R16, C05, P-price)"
+      ],
+      "recommended_angles": [
+        {
+          "name": "The real-day cold test",
+          "hook_idea": "\"Filled it with ice at 7am. Still rattling at 7pm.\" Show ice through a long shift, a 95-degree hike and a hot car. Close with the approved line: cold for up to 24 hours (Ridgeline lab test, 2026). Add TRAIL15 and Shop now.",
+          "why_it_works": "Most reviews praise cold that lasts in real conditions. Everyday proof is more believable than SummitSip's 36-hour number, and it uses the approved claim exactly.",
+          "evidence_ids": [
+            "R01",
+            "R07",
+            "R14",
+            "B-claim-1",
+            "B-claim-3",
+            "P-cold_retention"
+          ]
+        },
+        {
+          "name": "One bottle, whole week",
+          "hook_idea": "\"Desk. Gym. Trail. Same bottle.\" Montage: car cup holder in the morning, desk, gym, clipped to a pack at the weekend. Mention it fits most cup holders and the lid goes in the dishwasher.",
+          "why_it_works": "This matches the brand audience exactly and repeats reviewers' own words. It also covers two gaps no competitor touches: cup-holder fit and the dishwasher-safe lid.",
+          "evidence_ids": [
+            "R03",
+            "R16",
+            "R02",
+            "R10",
+            "R12",
+            "B-claim-4",
+            "B-claim-5"
+          ]
+        },
+        {
+          "name": "Hot coffee, too",
+          "hook_idea": "\"Coffee was still hot at lunch. Didn't expect that from a water bottle.\" Show a morning coffee pour, then lunch, then a cold campsite at dawn with warm tea. Use the approved line: hot for up to 12 hours (Ridgeline lab test, 2026).",
+          "why_it_works": "Customers are pleasantly surprised by this, and no competitor advertises it. It widens use beyond water to the commute and camping.",
+          "evidence_ids": [
+            "R05",
+            "R18",
+            "B-claim-2",
+            "P-hot_retention"
+          ]
+        }
+      ],
+      "avoid": [
+        "'Leak-proof' or any leak guarantee (banned in the brand guide; minor leaks reported in R04). Use 'leak-resistant' if the lid comes up at all.",
+        "'Lifetime warranty' and 'last bottle you'll ever buy'. The warranty is 2 years (B-claim-7). This is a SummitSip claim (C01).",
+        "'Unbreakable', 'indestructible' or any durability guarantee. Reviews report dents and chipped paint (R06, R15).",
+        "'Best' or any other unsupported superlative (banned in the brand guide).",
+        "Weight loss, 'lose weight' or any health or body claim, including R09's '10 pounds'. Don't use R09 in ads.",
+        "Energy, wellness or 'feel better' hydration claims. These are AquaCore's (C03) and count as health claims.",
+        "Cold for 36 hours or any figure above the tested 24h cold / 12h hot. Always add the lab-test qualifier.",
+        "Customer counts like '2 million' (C02) or any invented social proof. We have 18 reviews averaging 4.11.",
+        "Everest, expedition or 'tested at base camp' claims (C05).",
+        "Claiming 12 colours, straw lids or limited drops (C04). We have 4 colours.",
+        "Saying it fits every cup holder. The approved wording is 'fits most car cup holders'.",
+        "Calling it lightweight. It weighs 13.4 oz and R08 says it's heavier than plastic.",
+        "Hype words or long, salesy copy. The brand voice is plain, dry and uses short sentences.",
+        "Leading with unverified reviews (R06 and R15 are unverified)."
+      ]
+    },
+    "trace": [
+      {
+        "tool": "get_product",
+        "input": {},
+        "result_preview": "{\"title\": \"Ridgeline Trail Flask, 24 oz\", \"facts\": [{\"id\": \"P-desc\", \"text\": \"A 24 oz double-wall vacuum insulated bottle in 18/8 stainless steel. Keeps drinks cold for up to 24 hours and hot for up to 12 hours in our lab tests. Leak-resist"
+      },
+      {
+        "tool": "get_brand_guide",
+        "input": {},
+        "result_preview": "{\"voice\": \"Plain-spoken, outdoorsy, a little dry. Short sentences. Talks like a friend who hikes, not like an ad. No hype words.\", \"audience\": \"Active adults 25-45 who carry one bottle from the commute to the gym to the trail.\", \"offer\": {\""
+      },
+      {
+        "tool": "search_reviews",
+        "input": {
+          "query": "",
+          "min_rating": 1,
+          "max_rating": 5
+        },
+        "result_preview": "[{\"id\": \"R01\", \"rating\": 5, \"verified\": \"yes\", \"text\": \"Filled it with ice at 7am before a 10 hour shift. There was still ice rattling around when I got home.\"}, {\"id\": \"R02\", \"rating\": 5, \"verified\": \"yes\", \"text\": \"Finally a bottle that f"
+      },
+      {
+        "tool": "review_stats",
+        "input": {},
+        "result_preview": "{\"count\": 18, \"average\": 4.11, \"distribution\": {\"5\": 10, \"4\": 4, \"3\": 1, \"2\": 2, \"1\": 1}}"
+      },
+      {
+        "tool": "get_competitor_ads",
+        "input": {},
+        "result_preview": "[{\"id\": \"C01\", \"competitor\": \"SummitSip\", \"platform\": \"Instagram\", \"running_days\": 64, \"headline\": \"The last bottle you'll ever buy\", \"body\": \"Lifetime warranty. Leak-proof guaranteed. 100% unbreakable.\", \"cta\": \"Shop now\"}, {\"id\": \"C02\", \""
+      }
+    ]
+  },
+  "copywriter_round1": {
+    "model": "claude-opus-5-5",
+    "output": {
+      "static_ads": [
+        {
+          "id": "A1",
+          "angle": "The real-day cold test",
+          "headline": "Filled with ice at 7am. Still rattling.",
+          "subhead": "Cold for up to 24 hours in our 2026 lab test. Real days back it up.",
+          "offer_line": "15% off your first order with code TRAIL15",
+          "cta": "Shop now",
+          "claims": [
+            {
+              "text": "A customer filled it with ice at 7am and still had ice after a 10 hour shift.",
+              "evidence_ids": [
+                "R01"
+              ]
+            },
+            {
+              "text": "Keeps drinks cold for up to 24 hours (Ridgeline lab test, 2026).",
+              "evidence_ids": [
+                "B-claim-1",
+                "P-cold_retention"
+              ]
+            },
+            {
+              "text": "Customers report it staying cold on a 95 degree hike and in a hot car.",
+              "evidence_ids": [
+                "R07",
+                "R14"
+              ]
+            }
+          ],
+          "testimonial": {
+            "text": "Ice water on a 95 degree hike and it stayed cold the whole day.",
+            "review_id": "R07"
+          }
+        },
+        {
+          "id": "A2",
+          "angle": "One bottle, whole week",
+          "headline": "Desk. Gym. Trail. Same bottle.",
+          "subhead": "Fits most car cup holders. The lid goes in the dishwasher. Clips to your pack.",
+          "offer_line": "15% off your first order with code TRAIL15",
+          "cta": "Shop now",
+          "claims": [
+            {
+              "text": "Customers use the same bottle at the desk, the gym and on the trail.",
+              "evidence_ids": [
+                "R03",
+                "R16"
+              ]
+            },
+            {
+              "text": "Fits most car cup holders.",
+              "evidence_ids": [
+                "B-claim-4",
+                "P-base_diameter"
+              ]
+            },
+            {
+              "text": "Dishwasher-safe lid.",
+              "evidence_ids": [
+                "B-claim-5"
+              ]
+            },
+            {
+              "text": "Carry loop clips to a pack.",
+              "evidence_ids": [
+                "P-desc",
+                "R10"
+              ]
+            }
+          ],
+          "testimonial": {
+            "text": "One bottle for the commute, the gym, and the weekend. I stopped forgetting water at home.",
+            "review_id": "R16"
+          }
+        },
+        {
+          "id": "A3",
+          "angle": "Hot coffee, too",
+          "headline": "It does hot coffee, too.",
+          "subhead": "Hot for up to 12 hours in our 2026 lab test. Tea still warm after a freezing night.",
+          "offer_line": "15% off your first order with code TRAIL15",
+          "cta": "Shop now",
+          "claims": [
+            {
+              "text": "Keeps drinks hot for up to 12 hours (Ridgeline lab test, 2026).",
+              "evidence_ids": [
+                "B-claim-2",
+                "P-hot_retention"
+              ]
+            },
+            {
+              "text": "A camper's tea was still warm in the morning after a night below freezing.",
+              "evidence_ids": [
+                "R18"
+              ]
+            }
+          ],
+          "testimonial": {
+            "text": "Coffee was still hot at lunch. I did not expect that from a water bottle.",
+            "review_id": "R05"
+          }
+        }
+      ],
+      "video": {
+        "id": "V1",
+        "angle": "The real-day cold test",
+        "beats": [
+          {
+            "line": "Filled it with ice at 7am. Still rattling after the shift.",
+            "caption": "Ice at 7am. Still there.",
+            "broll_id": "broll_ice",
+            "evidence_ids": [
+              "R01"
+            ]
+          },
+          {
+            "line": "Ninety-five degree hike. Ice water stayed cold the whole day.",
+            "caption": "Cold all day on a 95° hike",
+            "broll_id": "broll_trail",
+            "evidence_ids": [
+              "R07"
+            ]
+          },
+          {
+            "line": "Left in a hot car all afternoon. Water still cold.",
+            "caption": "Hot car. Still cold water.",
+            "broll_id": "broll_road",
+            "evidence_ids": [
+              "R14"
+            ]
+          },
+          {
+            "line": "Same bottle at the gym. And the lid goes in the dishwasher.",
+            "caption": "Gym too. Lid: dishwasher.",
+            "broll_id": "broll_gym",
+            "evidence_ids": [
+              "R03",
+              "B-claim-5"
+            ]
+          },
+          {
+            "line": "Cold for up to 24 hours in our 2026 lab test.",
+            "caption": "Cold up to 24 hrs (lab test)",
+            "broll_id": "broll_ice",
+            "evidence_ids": [
+              "B-claim-1",
+              "P-cold_retention"
+            ]
+          }
+        ],
+        "end_card": "One bottle. Cold all day."
+      }
+    },
+    "trace": []
+  },
+  "reviewer_round1": {
+    "model": "claude-opus-5-5",
+    "output": {
+      "summary": "All four assets pass. Every claim matches its cited evidence. Testimonials are verbatim (or verbatim excerpts) from 5-star reviews. The offer and CTA match the brand. No forbidden phrases, competitors, or health claims appear, and the deterministic checks were clean. Only minor b-roll fit notes on V1.",
+      "assets": [
+        {
+          "asset_id": "A1",
+          "verdict": "pass",
+          "issues": [
+            {
+              "severity": "note",
+              "quote": "Ice water on a 95 degree hike and it stayed cold the whole day.",
+              "problem": "The testimonial is a verbatim excerpt of R07 but drops the final sentence 'Worth it.' This is acceptable because the meaning is unchanged.",
+              "fix": "No change required. Optionally include 'Worth it.' to quote the full review."
+            }
+          ]
+        },
+        {
+          "asset_id": "A2",
+          "verdict": "pass",
+          "issues": []
+        },
+        {
+          "asset_id": "A3",
+          "verdict": "pass",
+          "issues": []
+        },
+        {
+          "asset_id": "V1",
+          "verdict": "pass",
+          "issues": [
+            {
+              "severity": "note",
+              "quote": "broll_ice",
+              "problem": "The broll_ice image is a glass of water with a straw, ice and lemon, not the bottle. It loosely fits the ice lines but does not show the product being described.",
+              "fix": "Use product footage of the bottle filled with ice if available, or keep it as a generic ice visual."
+            },
+            {
+              "severity": "note",
+              "quote": "Left in a hot car all afternoon. Water still cold.",
+              "problem": "broll_road is an 'Evening car trip' image. It does not convey a hot afternoon, though it is still car-related and not misleading.",
+              "fix": "Swap in a daytime, sunny parked-car shot if one becomes available."
+            }
+          ]
+        }
+      ]
+    },
+    "trace": []
+  },
+  "reviewer_roundredteam": {
+    "model": "claude-opus-5-5",
+    "output": {
+      "summary": "All four assets fail. A1 uses the forbidden phrase 'leak-proof', a 36-hour cold claim that contradicts the 24-hour lab evidence, and a weight-loss testimonial. A2 names the competitor SummitSip and makes an unsupported comparison. A3 makes an unsupported lifetime-durability claim ('The last bottle you'll ever buy'). V1 has a forbidden weight-loss caption, a health claim ('boosts your energy'), a coffee line backed only by evidence about cold water, and a caption that contradicts its line. Most other claims, testimonials, numbers and the offer/CTA are correctly supported.",
+      "assets": [
+        {
+          "asset_id": "A1",
+          "verdict": "fail",
+          "issues": [
+            {
+              "severity": "blocker",
+              "quote": "Leak-proof lid.",
+              "problem": "'Leak-proof' is a forbidden phrase. The lid is leak-resistant, and some reviews report minor leaks. The deterministic check flagged this.",
+              "fix": "Change it to 'Leak-resistant lid.'"
+            },
+            {
+              "severity": "blocker",
+              "quote": "Cold for up to 36 hours, wherever you go.",
+              "problem": "The number 36 does not appear in any evidence and contradicts B-claim-1 and P-cold_retention, which say up to 24 hours. The deterministic check flagged this. It also conflicts with the ad's own claim of 24 hours.",
+              "fix": "Change it to 'Cold for up to 24 hours in our lab test.'"
+            },
+            {
+              "severity": "blocker",
+              "quote": "I've lost 10 pounds since I started carrying this everywhere and drinking more water.",
+              "problem": "The R09 testimonial is verbatim, but it makes a weight-loss (health/body) claim the brand cannot make.",
+              "fix": "Replace it with a verbatim cold-retention review, e.g. R07: 'Ice water on a 95 degree hike and it stayed cold the whole day. Worth it.' Or use R14."
+            }
+          ]
+        },
+        {
+          "asset_id": "A2",
+          "verdict": "fail",
+          "issues": [
+            {
+              "severity": "blocker",
+              "quote": "Lighter than SummitSip. Same grip.",
+              "problem": "The headline names a competitor, which the deterministic check flagged. It also makes a weight and grip comparison that no cited evidence supports.",
+              "fix": "Use a supported headline such as 'One bottle. Desk, gym, trail.' (supported by R03 and R16)."
+            }
+          ]
+        },
+        {
+          "asset_id": "A3",
+          "verdict": "fail",
+          "issues": [
+            {
+              "severity": "blocker",
+              "quote": "The last bottle you'll ever buy.",
+              "problem": "This is an unsupported lifetime-durability claim. The warranty is 2 years, and reviews report dents and chipped paint. It effectively implies the forbidden 'lifetime warranty' and 'unbreakable' claims.",
+              "fix": "Remove the sentence. Use 'Hot up to 12 hours in our lab test.' alone, or add a supported line such as 'Backed by a 2-year warranty.' (P-desc)."
+            },
+            {
+              "severity": "note",
+              "quote": "A camper's tea was still warm in the morning after a night below freezing.",
+              "problem": "R18 supports this claim. Note that 'warm' after a cold night is a softer claim than the 12-hour lab figure, so do not merge the two.",
+              "fix": "Keep the wording as 'still warm'. Do not upgrade it to 'hot'."
+            }
+          ]
+        },
+        {
+          "asset_id": "V1",
+          "verdict": "fail",
+          "issues": [
+            {
+              "severity": "blocker",
+              "quote": "Drink more, lose weight",
+              "problem": "'Lose weight' is a forbidden phrase and a health claim, which the deterministic check flagged. The caption also has nothing to do with the hike line it accompanies.",
+              "fix": "Change the caption to '95° hike. Still cold.'"
+            },
+            {
+              "severity": "blocker",
+              "quote": "Coffee still hot at lunch, and it boosts your energy all day.",
+              "problem": "'Boosts your energy' is a health/body claim. The line about hot coffee cites R14, which is about cold water in a hot car, so the claim is unsupported by its cited evidence.",
+              "fix": "Rewrite the line to match R14: 'Left it in a hot car all afternoon. Water still cold.'"
+            },
+            {
+              "severity": "blocker",
+              "quote": "Hot car. Still cold water.",
+              "problem": "The caption contradicts its spoken line: the line says hot coffee, the caption says cold water. The broll_road (car trip) shot also does not fit a coffee line.",
+              "fix": "Once the line is rewritten to the R14 hot-car version, keep this caption and broll_road. Both will then match."
+            },
+            {
+              "severity": "note",
+              "quote": "broll_ice",
+              "problem": "This shot is a glass of water with ice and lemon, not the bottle. It is acceptable for the ice idea but generic, and it is used twice.",
+              "fix": "Use product footage of ice in the bottle if available, or keep it for only one of the two beats."
+            },
+            {
+              "severity": "note",
+              "quote": "broll_trail",
+              "problem": "The Icelandic mountain trail fits a hike but does not visually suggest a 95-degree day.",
+              "fix": "Consider a sunnier, hot-weather trail shot if available."
+            }
+          ]
+        }
+      ]
+    },
+    "trace": []
+  }
+}

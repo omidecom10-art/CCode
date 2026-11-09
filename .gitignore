@@ -1,9 +1,16 @@
 .env
+*.env
 __pycache__/
 *.pyc
-output/
+.pytest_cache/
 *.egg-info/
 dist/
 build/
 .venv/
 venv/
+
+# Studio: keep output/sample_run (committed), ignore other runs
+output/**/work/
+site/
+.vercel/
+directives/

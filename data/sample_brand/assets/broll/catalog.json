@@ -1,0 +1,69 @@
+[
+  {
+    "id": "broll_trail",
+    "path": "broll/broll_trail.jpg",
+    "type": "still",
+    "tags": [
+      "outdoors",
+      "hiking",
+      "adventure"
+    ],
+    "description": "Hiking trail on N\u00e1mafjall Mountain, Iceland, 20240716 1130 1346.jpg"
+  },
+  {
+    "id": "broll_gym",
+    "path": "broll/broll_gym.jpg",
+    "type": "still",
+    "tags": [
+      "gym",
+      "workout",
+      "fitness"
+    ],
+    "description": "A close-up view of a set of heavy dumbbells.jpg"
+  },
+  {
+    "id": "broll_desk",
+    "path": "broll/broll_desk.jpg",
+    "type": "still",
+    "tags": [
+      "work",
+      "desk",
+      "office",
+      "daily"
+    ],
+    "description": "Laptop and small plant on a desk in a modern workspace during daylight hours.jpg"
+  },
+  {
+    "id": "broll_ice",
+    "path": "broll/broll_ice.jpg",
+    "type": "still",
+    "tags": [
+      "cold",
+      "ice",
+      "refreshing"
+    ],
+    "description": "Bermuda (UK) photos number 41 glass of water with straw and ice and lemon.jpg"
+  },
+  {
+    "id": "broll_camp",
+    "path": "broll/broll_camp.jpg",
+    "type": "still",
+    "tags": [
+      "camping",
+      "outdoors",
+      "morning"
+    ],
+    "description": "Tent camping.jpg"
+  },
+  {
+    "id": "broll_road",
+    "path": "broll/broll_road.jpg",
+    "type": "still",
+    "tags": [
+      "travel",
+      "commute",
+      "car"
+    ],
+    "description": "Evening car trip (Unsplash).jpg"
+  }
+]

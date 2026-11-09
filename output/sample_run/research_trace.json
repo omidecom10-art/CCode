@@ -1,0 +1,31 @@
+[
+  {
+    "tool": "get_product",
+    "input": {},
+    "result_preview": "{\"title\": \"Ridgeline Trail Flask, 24 oz\", \"facts\": [{\"id\": \"P-desc\", \"text\": \"A 24 oz double-wall vacuum insulated bottle in 18/8 stainless steel. Keeps drinks cold for up to 24 hours and hot for up to 12 hours in our lab tests. Leak-resist"
+  },
+  {
+    "tool": "get_brand_guide",
+    "input": {},
+    "result_preview": "{\"voice\": \"Plain-spoken, outdoorsy, a little dry. Short sentences. Talks like a friend who hikes, not like an ad. No hype words.\", \"audience\": \"Active adults 25-45 who carry one bottle from the commute to the gym to the trail.\", \"offer\": {\""
+  },
+  {
+    "tool": "search_reviews",
+    "input": {
+      "query": "",
+      "min_rating": 1,
+      "max_rating": 5
+    },
+    "result_preview": "[{\"id\": \"R01\", \"rating\": 5, \"verified\": \"yes\", \"text\": \"Filled it with ice at 7am before a 10 hour shift. There was still ice rattling around when I got home.\"}, {\"id\": \"R02\", \"rating\": 5, \"verified\": \"yes\", \"text\": \"Finally a bottle that f"
+  },
+  {
+    "tool": "review_stats",
+    "input": {},
+    "result_preview": "{\"count\": 18, \"average\": 4.11, \"distribution\": {\"5\": 10, \"4\": 4, \"3\": 1, \"2\": 2, \"1\": 1}}"
+  },
+  {
+    "tool": "get_competitor_ads",
+    "input": {},
+    "result_preview": "[{\"id\": \"C01\", \"competitor\": \"SummitSip\", \"platform\": \"Instagram\", \"running_days\": 64, \"headline\": \"The last bottle you'll ever buy\", \"body\": \"Lifetime warranty. Leak-proof guaranteed. 100% unbreakable.\", \"cta\": \"Shop now\"}, {\"id\": \"C02\", \""
+  }
+]

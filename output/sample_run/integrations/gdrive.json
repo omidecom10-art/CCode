@@ -1,0 +1,106 @@
+[
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A1_feed.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A1_feed.png",
+      "bytes": 286878
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A1_story.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A1_story.png",
+      "bytes": 659805
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A2_feed.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A2_feed.png",
+      "bytes": 292325
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A2_story.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A2_story.png",
+      "bytes": 668336
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A3_feed.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A3_feed.png",
+      "bytes": 280723
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "A3_story.png",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "A3_story.png",
+      "bytes": 653718
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "V1_9x16.mp4",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "V1_9x16.mp4",
+      "bytes": 7366044
+    }
+  },
+  {
+    "note": "dry run: credentials not set, nothing was sent",
+    "payload": {
+      "metadata": {
+        "name": "V1_poster.jpg",
+        "parents": [
+          "<FOLDER_ID>"
+        ]
+      },
+      "file": "V1_poster.jpg",
+      "bytes": 141895
+    }
+  }
+]

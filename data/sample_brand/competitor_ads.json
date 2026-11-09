@@ -1,0 +1,10 @@
+{
+  "_note": "Fictional competitor ads, the kind of rows a Meta Ad Library pull returns (studio/integrations/meta_ads.py has the live hook).",
+  "ads": [
+    {"id": "C01", "competitor": "SummitSip", "platform": "Instagram", "running_days": 64, "headline": "The last bottle you'll ever buy", "body": "Lifetime warranty. Leak-proof guaranteed. 100% unbreakable.", "cta": "Shop now"},
+    {"id": "C02", "competitor": "SummitSip", "platform": "Facebook", "running_days": 21, "headline": "Hydration that keeps up", "body": "Cold for 36 hours. Join 2 million hydrated humans.", "cta": "Learn more"},
+    {"id": "C03", "competitor": "AquaCore", "platform": "Instagram", "running_days": 88, "headline": "Drink more, feel better", "body": "Our bottle helps you hit your water goals and boosts your energy.", "cta": "Shop now"},
+    {"id": "C04", "competitor": "AquaCore", "platform": "TikTok", "running_days": 30, "headline": "Influencer unboxing", "body": "12 colours. Matching straw lids. Limited drop.", "cta": "Shop now"},
+    {"id": "C05", "competitor": "PeakVessel", "platform": "Facebook", "running_days": 45, "headline": "Built for the summit", "body": "Tested on Everest base camp. $49.", "cta": "Shop now"}
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "total_seconds": 24.12,
+  "segments": [
+    {
+      "beat": 1,
+      "line": "Filled it with ice at 7am. Still rattling after the shift.",
+      "caption": "Ice at 7am. Still there.",
+      "broll_id": "broll_ice",
+      "seconds": 4.495
+    },
+    {
+      "beat": 2,
+      "line": "Ninety-five degree hike. Ice water stayed cold the whole day.",
+      "caption": "Cold all day on a 95\u00b0 hike",
+      "broll_id": "broll_trail",
+      "seconds": 4.239
+    },
+    {
+      "beat": 3,
+      "line": "Left in a hot car all afternoon. Water still cold.",
+      "caption": "Hot car. Still cold water.",
+      "broll_id": "broll_road",
+      "seconds": 3.919
+    },
+    {
+      "beat": 4,
+      "line": "Same bottle at the gym. And the lid goes in the dishwasher.",
+      "caption": "Gym too. Lid: dishwasher.",
+      "broll_id": "broll_gym",
+      "seconds": 4.047
+    },
+    {
+      "beat": 5,
+      "line": "Cold for up to 24 hours in our 2026 lab test.",
+      "caption": "Cold up to 24 hrs (lab test)",
+      "broll_id": "broll_ice",
+      "seconds": 4.815
+    },
+    {
+      "beat": "end",
+      "line": "",
+      "caption": "One bottle. Cold all day.",
+      "broll_id": "end_card",
+      "seconds": 2.6
+    }
+  ]
+}
