@@ -4,7 +4,7 @@ import shutil
 
 import pytest
 
-from conftest import HAS_FFMPEG, ROOT
+from tests.conftest import HAS_FFMPEG, ROOT
 from studio import pipeline
 
 CASSETTE = ROOT / "output" / "sample_run" / "llm_cassette.json"

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from conftest import HAS_FFMPEG
+from tests.conftest import HAS_FFMPEG
 from studio.checks import check_video_file
 from studio.engines import static_ads, video
 
