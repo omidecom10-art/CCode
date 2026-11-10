@@ -1,0 +1,652 @@
+<title>Ad Agent</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Modular tool dashboard — each tool is a card in a single workspace */
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-alt: #f5f4f2;
+  --fg: #1c1917;
+  --fg-muted: #78716c;
+  --border: #e7e5e4;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-fg: #ffffff;
+  --success: #16a34a;
+  --error: #dc2626;
+  --radius: 10px;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0a09;
+    --surface: #1c1917;
+    --surface-alt: #292524;
+    --fg: #fafaf9;
+    --fg-muted: #a8a29e;
+    --border: #44403c;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-fg: #ffffff;
+    --success: #22c55e;
+    --error: #ef4444;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0a09;
+  --surface: #1c1917;
+  --surface-alt: #292524;
+  --fg: #fafaf9;
+  --fg-muted: #a8a29e;
+  --border: #44403c;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-fg: #ffffff;
+  --success: #22c55e;
+  --error: #ef4444;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  min-height: 100vh;
+}
+
+.header {
+  padding-block: 40px 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+.header p {
+  color: var(--fg-muted);
+  margin: 0;
+  font-size: 15px;
+}
+
+.tools-nav {
+  max-width: 720px;
+  margin: 0 auto 24px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tools-nav button {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.tools-nav button:hover { border-color: var(--accent); color: var(--fg); }
+.tools-nav button.active {
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-color: var(--accent);
+}
+
+.tool-panel {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.card h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.card .subtitle {
+  color: var(--fg-muted);
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--surface-alt);
+  color: var(--fg-muted);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.badge.free { background: #dcfce7; color: #166534; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .badge.free { background: #14532d; color: #86efac; }
+}
+:root[data-theme="dark"] .badge.free { background: #14532d; color: #86efac; }
+
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.drop-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.drop-zone .icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  opacity: 0.4;
+}
+.drop-zone .label {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.drop-zone .hint {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface-alt);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.file-info .name {
+  font-weight: 500;
+  font-size: 14px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.file-info .size {
+  font-size: 13px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+.file-info .remove {
+  background: none;
+  border: none;
+  color: var(--fg-muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 4px;
+  line-height: 1;
+}
+.file-info .remove:hover { color: var(--error); }
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+@media (max-width: 500px) {
+  .options { grid-template-columns: 1fr; }
+}
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--fg-muted);
+}
+.field select, .field input[type="text"] {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+.field select:focus, .field input[type="text"]:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-secondary {
+  background: var(--surface-alt);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover:not(:disabled) { background: var(--border); }
+
+.result {
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.result h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.result .meta {
+  font-size: 13px;
+  color: var(--fg-muted);
+  margin-bottom: 16px;
+}
+
+.transcript-text {
+  background: var(--surface-alt);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.segments {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.segment {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  align-items: baseline;
+}
+.segment:hover { background: var(--surface-alt); }
+.segment .ts {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  min-width: 100px;
+}
+.segment .text { min-width: 0; }
+
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+.view-toggle button {
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.view-toggle button.active {
+  background: var(--surface-alt);
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.status {
+  font-size: 14px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+.status.loading { background: var(--surface-alt); }
+.status.error { background: #fef2f2; color: var(--error); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .status.error { background: #450a0a; color: #fca5a5; }
+}
+:root[data-theme="dark"] .status.error { background: #450a0a; color: #fca5a5; }
+
+.coming-soon {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--fg-muted);
+}
+.coming-soon .icon { font-size: 40px; opacity: 0.3; margin-bottom: 12px; }
+.coming-soon h3 {
+  font-family: var(--font-display);
+  margin: 0 0 6px;
+  color: var(--fg);
+}
+.coming-soon p { font-size: 14px; margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  * { transition: none !important; }
+}
+</style>
+
+<div class="header">
+  <h1>Ad Agent</h1>
+  <p>AI-verktyg for videoannonser</p>
+</div>
+
+<nav class="tools-nav" id="nav">
+  <button class="active" data-tool="transcribe">Transkribera</button>
+  <button data-tool="scripts">Manus</button>
+  <button data-tool="analyze">Analysera</button>
+  <button data-tool="edit">Redigera</button>
+</nav>
+
+<main class="tool-panel" id="panel"></main>
+
+<script>
+const API = window.location.origin;
+
+const PANELS = {
+  transcribe: () => `
+    <div class="card">
+      <h2>Transkribera video <span class="badge free">Gratis</span></h2>
+      <p class="subtitle">Ladda upp en video eller ljudfil — far tillbaka text med tidsstamplar</p>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept="video/*,audio/*">
+        <div class="icon">&#9654;</div>
+        <div class="label">Slapp en fil har eller klicka for att valja</div>
+        <div class="hint">MP4, MOV, MP3, WAV — max 500 MB</div>
+      </div>
+
+      <div id="fileCard" hidden></div>
+
+      <div class="options">
+        <div class="field">
+          <label for="model">Modellstorlek</label>
+          <select id="model">
+            <option value="tiny">Tiny — snabbast</option>
+            <option value="base" selected>Base — standard</option>
+            <option value="small">Small</option>
+            <option value="medium">Medium — battre precision</option>
+            <option value="large-v3">Large — bast precision</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="lang">Sprak</label>
+          <select id="lang">
+            <option value="">Auto-detect</option>
+            <option value="sv">Svenska</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Francais</option>
+            <option value="es">Espanol</option>
+            <option value="no">Norsk</option>
+            <option value="da">Dansk</option>
+            <option value="fi">Suomi</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnTranscribe" disabled>Transkribera</button>
+        <button class="btn btn-secondary" id="btnSrt" disabled>Ladda ner SRT</button>
+      </div>
+
+      <div id="status" hidden></div>
+      <div id="result" hidden></div>
+    </div>
+  `,
+  scripts: () => comingSoon('Manus', 'Skriv annonsmanus, generera hooks och iterera vinnande scripts'),
+  analyze: () => comingSoon('Analysera', 'Analysera annonser, jamfor och fa forslag pa forbattringar'),
+  edit: () => comingSoon('Redigera', 'Trimma, sammanfoga, lagga till text och andra videor'),
+};
+
+function comingSoon(title, desc) {
+  return `<div class="card"><div class="coming-soon">
+    <div class="icon">&#128736;</div>
+    <h3>${title}</h3>
+    <p>${desc} — kommer snart</p>
+  </div></div>`;
+}
+
+let currentFile = null;
+let lastResult = null;
+
+function switchTool(name) {
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.tool === name));
+  document.getElementById('panel').innerHTML = PANELS[name]();
+  currentFile = null;
+  lastResult = null;
+  if (name === 'transcribe') bindTranscribe();
+}
+
+function bindTranscribe() {
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileCard = document.getElementById('fileCard');
+  const btnT = document.getElementById('btnTranscribe');
+  const btnS = document.getElementById('btnSrt');
+
+  function setFile(f) {
+    currentFile = f;
+    lastResult = null;
+    const mb = (f.size / 1024 / 1024).toFixed(1);
+    fileCard.innerHTML = `<div class="file-info">
+      <span class="name">${f.name}</span>
+      <span class="size">${mb} MB</span>
+      <button class="remove" title="Ta bort">&times;</button>
+    </div>`;
+    fileCard.hidden = false;
+    dropZone.hidden = true;
+    btnT.disabled = false;
+    btnS.disabled = false;
+    fileCard.querySelector('.remove').onclick = () => {
+      currentFile = null;
+      fileCard.hidden = true;
+      dropZone.hidden = false;
+      btnT.disabled = true;
+      btnS.disabled = true;
+      document.getElementById('result').hidden = true;
+      document.getElementById('status').hidden = true;
+    };
+  }
+
+  fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+  });
+
+  btnT.addEventListener('click', () => runTranscription('json'));
+  btnS.addEventListener('click', () => runTranscription('srt'));
+}
+
+async function runTranscription(format) {
+  if (!currentFile) return;
+  const status = document.getElementById('status');
+  const result = document.getElementById('result');
+  const btnT = document.getElementById('btnTranscribe');
+  const btnS = document.getElementById('btnSrt');
+
+  status.hidden = false;
+  status.className = 'status loading';
+  status.innerHTML = '<span class="spinner"></span>Transkriberar — detta kan ta en stund...';
+  result.hidden = true;
+  btnT.disabled = true;
+  btnS.disabled = true;
+
+  const fd = new FormData();
+  fd.append('file', currentFile);
+  const model = document.getElementById('model').value;
+  const lang = document.getElementById('lang').value;
+  const params = new URLSearchParams({ model_size: model, format });
+  if (lang) params.set('language', lang);
+
+  try {
+    const resp = await fetch(`${API}/transcribe?${params}`, { method: 'POST', body: fd });
+    if (!resp.ok) {
+      const err = await resp.text();
+      throw new Error(err);
+    }
+
+    if (format === 'srt') {
+      const text = await resp.text();
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = currentFile.name.replace(/\.[^.]+$/, '') + '.srt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      status.className = 'status loading';
+      status.textContent = 'SRT-fil nedladdad';
+    } else {
+      lastResult = await resp.json();
+      showResult(lastResult);
+      status.hidden = true;
+    }
+  } catch (e) {
+    status.className = 'status error';
+    status.textContent = 'Fel: ' + (e.message || 'Nagot gick fel');
+  } finally {
+    btnT.disabled = false;
+    btnS.disabled = false;
+  }
+}
+
+function showResult(data) {
+  const el = document.getElementById('result');
+  el.hidden = false;
+
+  const dur = data.duration >= 60
+    ? `${Math.floor(data.duration / 60)}m ${Math.round(data.duration % 60)}s`
+    : `${data.duration.toFixed(1)}s`;
+
+  let segmentsHtml = '';
+  if (data.segments && data.segments.length) {
+    segmentsHtml = data.segments.map(s =>
+      `<div class="segment"><span class="ts">${fmtTime(s.start)} — ${fmtTime(s.end)}</span><span class="text">${esc(s.text)}</span></div>`
+    ).join('');
+  }
+
+  el.innerHTML = `<div class="result">
+    <h3>Transkription</h3>
+    <div class="meta">Sprak: ${data.language} · Langd: ${dur} · ${data.segments.length} segment</div>
+    <div class="view-toggle">
+      <button class="active" data-view="text">Fulltext</button>
+      <button data-view="segments">Tidsstamplar</button>
+    </div>
+    <div id="viewText" class="transcript-text">${esc(data.text)}</div>
+    <div id="viewSegments" class="segments" hidden>${segmentsHtml}</div>
+  </div>`;
+
+  el.querySelectorAll('.view-toggle button').forEach(b => {
+    b.addEventListener('click', () => {
+      el.querySelectorAll('.view-toggle button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('viewText').hidden = b.dataset.view !== 'text';
+      document.getElementById('viewSegments').hidden = b.dataset.view !== 'segments';
+    });
+  });
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  const ms = Math.round((s % 1) * 10);
+  return `${m}:${String(sec).padStart(2, '0')}.${ms}`;
+}
+
+function esc(t) {
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
+}
+
+document.getElementById('nav').addEventListener('click', e => {
+  if (e.target.dataset.tool) switchTool(e.target.dataset.tool);
+});
+
+switchTool('transcribe');
+</script>

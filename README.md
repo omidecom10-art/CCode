@@ -142,6 +142,18 @@ tools/
 
 100% av LLM-anrop gar genom Haiku (~20x billigare an Sonnet). All mediebearbetning ar lokal och gratis.
 
+## Webbtjanst
+
+Starta webbtjansten med grafiskt granssnitt:
+
+```bash
+uvicorn web.app:app --reload --port 8000
+```
+
+Oppna `http://localhost:8000` — ladda upp videofiler direkt i webblasaren.
+
+API-dokumentation finns pa `http://localhost:8000/docs`.
+
 ## Tester
 
 ```bash
