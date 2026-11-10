@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { tasks, agents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
-const MODEL_ID = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5-20250514";
+const MODEL_ID = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
 
 export async function runTaskInBackground(taskId: string) {
   try {

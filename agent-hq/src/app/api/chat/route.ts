@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { tasks } from "@/lib/db/schema";
 import { runTaskInBackground } from "@/lib/agents/run";
 
-const MODEL_ID = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5-20250514";
+const MODEL_ID = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-6";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
