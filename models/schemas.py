@@ -102,6 +102,19 @@ class ScriptVariation(BaseModel):
     why_it_works: str = Field(description="Why this variation should perform well")
 
 
+class TranscriptionSegment(BaseModel):
+    start: float = Field(description="Start time in seconds")
+    end: float = Field(description="End time in seconds")
+    text: str = Field(description="Transcribed text for this segment")
+
+
+class TranscriptionResult(BaseModel):
+    text: str = Field(description="Full transcribed text")
+    language: str = Field(description="Detected language code, e.g. 'en', 'sv'")
+    duration: float = Field(description="Audio duration in seconds")
+    segments: list[TranscriptionSegment] = Field(description="Timestamped segments")
+
+
 class AdScriptBrief(BaseModel):
     product_or_service: str
     target_audience: str

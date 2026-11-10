@@ -21,6 +21,7 @@ You have access to these tools:
 9. remove_watermark - Remove watermarks from images or videos
 10. remove_subtitles - Remove subtitles from images or videos
 11. process_image - Process images (resize, add text, crop, adjust)
+12. transcribe - Transcribe audio/video to text with timestamps (local Whisper, free)
 
 Always think step by step. For multi-step tasks, chain operations in the right order.
 Be specific about file paths and parameters. Ask for clarification if essential info is missing."""
@@ -198,6 +199,19 @@ TOOL_DEFINITIONS = [
             "required": ["original_script", "what_worked"],
         },
     },
+    {
+        "name": "transcribe",
+        "description": "Transcribe audio or video to text with timestamps. Uses local Whisper (free). Returns full text, language, and timestamped segments.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "input_path": {"type": "string", "description": "Path to audio or video file"},
+                "model_size": {"type": "string", "enum": ["tiny", "base", "small", "medium", "large-v3"], "default": "base"},
+                "language": {"type": "string", "description": "Language code (e.g. 'sv', 'en'). Auto-detect if omitted."},
+            },
+            "required": ["input_path"],
+        },
+    },
 ]
 
 
@@ -335,6 +349,15 @@ def _execute_tool(name: str, params: dict) -> str:
                 params["original_script"], params["what_worked"], params.get("num_variations", 5),
             )
             return json.dumps([v.model_dump() for v in variations], indent=2, ensure_ascii=False)
+
+        elif name == "transcribe":
+            from tools.transcriber import transcribe
+            result = transcribe(
+                params["input_path"],
+                model_size=params.get("model_size", "base"),
+                language=params.get("language"),
+            )
+            return result.model_dump_json(indent=2, ensure_ascii=False)
 
         return f"Unknown tool: {name}"
 

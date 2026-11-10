@@ -107,6 +107,36 @@ def cmd_remove_subtitles(args):
     print(f"Done: {result}")
 
 
+def cmd_transcribe(args):
+    from tools.transcriber import transcribe, transcribe_to_srt
+    print(f"Transcribing {args.input}...")
+
+    if args.srt:
+        result_path = transcribe_to_srt(
+            args.input, args.srt,
+            model_size=args.model, language=args.language,
+        )
+        print(f"SRT saved to: {result_path}")
+    else:
+        result = transcribe(args.input, model_size=args.model, language=args.language)
+        print(f"\nLanguage: {result.language}")
+        print(f"Duration: {result.duration}s")
+        print(f"\n--- Full text ---\n{result.text}\n")
+
+        if args.timestamps:
+            print("--- Segments ---")
+            for seg in result.segments:
+                print(f"[{seg.start:.1f}s - {seg.end:.1f}s] {seg.text}")
+
+        if args.output:
+            import json
+            from pathlib import Path
+            Path(args.output).write_text(
+                result.model_dump_json(indent=2, ensure_ascii=False), encoding="utf-8",
+            )
+            print(f"\nJSON saved to: {args.output}")
+
+
 def cmd_write_script(args):
     from agent.script_writer import save_script, write_ad_script
     brief = " ".join(args.brief)
@@ -200,6 +230,17 @@ def main():
     p.add_argument("--input", "-i", required=True)
     p.add_argument("--output", "-o", required=True)
     p.set_defaults(func=cmd_remove_subtitles)
+
+    # transcribe
+    p = sub.add_parser("transcribe", help="Transcribe audio/video to text")
+    p.add_argument("--input", "-i", required=True, help="Audio or video file to transcribe")
+    p.add_argument("--output", "-o", help="Save transcription as JSON file")
+    p.add_argument("--srt", help="Save as SRT subtitle file")
+    p.add_argument("--model", default="base", choices=["tiny", "base", "small", "medium", "large-v3"],
+                    help="Whisper model size (default: base)")
+    p.add_argument("--language", help="Language code (e.g. 'sv', 'en'). Auto-detect if omitted")
+    p.add_argument("--timestamps", "-t", action="store_true", help="Show timestamped segments")
+    p.set_defaults(func=cmd_transcribe)
 
     # write-script (ad video script/manus)
     p = sub.add_parser("write-script", help="Write a video ad script/manus")

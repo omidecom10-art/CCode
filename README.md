@@ -15,6 +15,7 @@ AI-agent som skapar annonsmanus, analyserar annonser, redigerar video och tar bo
 | Ta bort vattenmarke | OpenCV (lokalt) | $0.00 |
 | Ta bort undertexter | OpenCV (lokalt) | $0.00 |
 | Bildredigering | Pillow (lokalt) | $0.00 |
+| Transkribera video | Whisper (lokalt) | $0.00 |
 
 **Typiskt arbetsflode:** Skriv manus + generera hooks + analysera = ~$0.003 (under 1 cent).
 
@@ -95,6 +96,27 @@ python -m cli.main edit -op resize -i video.mp4 -o output.mp4 --width 1080 --hei
 python -m cli.main edit -op speed -i video.mp4 -o output.mp4 --speed 1.5
 ```
 
+### Transkribera videoannonser
+
+```bash
+# Transkribera en video till text
+python -m cli.main transcribe -i annons.mp4
+
+# Med tidsstamplar
+python -m cli.main transcribe -i annons.mp4 --timestamps
+
+# Spara som JSON
+python -m cli.main transcribe -i annons.mp4 -o transkription.json
+
+# Spara som SRT-undertexter
+python -m cli.main transcribe -i annons.mp4 --srt undertexter.srt
+
+# Ange sprak och storre modell for battre precision
+python -m cli.main transcribe -i annons.mp4 --language sv --model medium
+```
+
+Modellstorlekar: `tiny` (snabbast), `base` (standard), `small`, `medium`, `large-v3` (bast precision).
+
 ### Ta bort vattenmarken och undertexter
 
 ```bash
@@ -112,6 +134,7 @@ agent/
   planner.py        - Bryter ner komplexa uppgifter i steg (Haiku)
 tools/
   video_editor.py      - FFmpeg-wrapper (gratis)
+  transcriber.py       - Whisper-transkribering (gratis)
   watermark_remover.py - OpenCV inpainting (gratis)
   image_processor.py   - Pillow/OpenCV (gratis)
   ad_analyzer.py       - Annonsanalys (Haiku)
